@@ -1,15 +1,15 @@
-const Comments = require("../models/testModel");
+const Users = require("../models/testModel");
 
-exports.getComments = async (req, res, next) => {
+exports.getUsers = async (req, res, next) => {
   try {
-    const comments = await Comments.find();
+    const users = await Users.find({});
 
-    console.log("comments:", comments);
+    console.log("data:", users);
 
     res.status(200).json({
       status: "success",
       body: {
-        comments,
+        users,
       },
     });
   } catch (err) {

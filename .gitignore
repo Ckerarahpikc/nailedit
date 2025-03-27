@@ -7,5 +7,7 @@ backend/node_modules/
 client/dist/
 
 # env variables
-client/.env
+client/config/
 backend/config/config.env
+
+

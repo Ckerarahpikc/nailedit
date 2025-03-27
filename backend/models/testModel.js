@@ -1,7 +1,7 @@
 const { Schema, model } = require("mongoose");
 const validator = require("validator");
 
-const commentsSchema = new Schema({
+const usersSchema = new Schema({
   name: {
     type: String,
     required: [true, "This comment should include a name."],
@@ -29,5 +29,5 @@ const commentsSchema = new Schema({
   },
 });
 
-const Comments = model("test", commentsSchema);
-module.exports = Comments;
+const Users = model("users", usersSchema);
+module.exports = Users;
