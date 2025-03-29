@@ -1,11 +1,11 @@
-function Logo() {
+function Logo({w, h}) {
   return (
     <svg
       version="1.2"
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 534 84"
-      width="734"
-      height="84"
+      viewBox="0 0 434 64"
+      width="234"
+      height="54"
     >
       <title>NailedIt</title>
       <text

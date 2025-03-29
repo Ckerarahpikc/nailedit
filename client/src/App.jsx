@@ -5,6 +5,7 @@ import PageNotFound from "./pages/PageNotFound";
 import AppLayout from "./ui/AppLayout";
 import Home from "./pages/Home";
 import Profile from "./pages/Profile";
+import Login from "./pages/Login";
 
 function App() {
   return (
@@ -13,11 +14,13 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route element={<AppLayout />}>
-            <Route index element={<Navigate to="/home" replace />} />
+            <Route element={<Navigate to="/home" replace />} />
             <Route path={"/home"} element={<Home />} />
             <Route path={"/profile"} element={<Profile />} />
-            <Route path={"*"} element={<PageNotFound />} />
           </Route>
+
+          <Route index path={"/login"} element={<Login />} />
+          <Route path={"*"} element={<PageNotFound />} />
         </Routes>
       </BrowserRouter>
     </>

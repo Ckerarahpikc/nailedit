@@ -1,4 +1,6 @@
 import styled, { css } from "styled-components";
+import { useNavigate } from "react-router-dom";
+
 import ImageRoyalHands from "../assets/home/royalhands.jpg";
 import ImageBookHands from "../assets/home/booknails.jpg";
 import ImageElephant from "../assets/home/elephantonbooks.jpg";
@@ -56,6 +58,8 @@ const ButtonContainer = styled.div`
 `;
 
 function Home() {
+  const navigate = useNavigate();
+
   return (
     <StyledHomePage>
       <Section>
@@ -73,7 +77,11 @@ function Home() {
             </div>
 
             <ButtonContainer>
-              <Button size="large" variation="primary">
+              <Button
+                size="large"
+                variation="primary"
+                onClick={() => navigate("/profile", { replace: true })}
+              >
                 Try Now
               </Button>
               <Button size="large" variation="regular">

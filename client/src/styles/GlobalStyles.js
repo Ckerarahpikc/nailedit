@@ -133,35 +133,35 @@ img {
   max-width: 100%;
   filter: grayscale(var(--image-grayscale)) opacity(var(--image-opacity));
 }
+`;
 
 /* Dark Mode */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-grey-0: #1a1a1a;
-    --color-grey-50: #2b2b2b;
-    --color-grey-100: #3f3f3f;
-    --color-grey-200: #5c5c5c;
-    --color-grey-300: #7a7a7a;
-    --color-grey-400: #a0a0a0;
-    --color-grey-500: #c7c7c7;
-    --color-grey-600: #e0e0e0;
-    --color-grey-700: #f3f3f3;
-    --color-grey-800: #f9f9f9;
-    --color-grey-900: #ffffff;
+// @media (prefers-color-scheme: dark) {
+//   :root {
+//     --color-grey-0: #1a1a1a;
+//     --color-grey-50: #2b2b2b;
+//     --color-grey-100: #3f3f3f;
+//     --color-grey-200: #5c5c5c;
+//     --color-grey-300: #7a7a7a;
+//     --color-grey-400: #a0a0a0;
+//     --color-grey-500: #c7c7c7;
+//     --color-grey-600: #e0e0e0;
+//     --color-grey-700: #f3f3f3;
+//     --color-grey-800: #f9f9f9;
+//     --color-grey-900: #ffffff;
 
-    --color-brand-500: #c2a372;
-    --color-brand-600: #9c7f4b;
-    --color-brand-700: #7d6641;
+//     --color-brand-500: #c2a372;
+//     --color-brand-600: #9c7f4b;
+//     --color-brand-700: #7d6641;
 
-    --backdrop-color: rgba(0, 0, 0, 0.3);
-    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
-    --shadow-md: 0px 0.6rem 2.4rem rgba(0, 0, 0, 0.3);
-    --shadow-lg: 0 2.4rem 3.2rem rgba(0, 0, 0, 0.4);
-    
-    --image-grayscale: 10%;
-    --image-opacity: 90%;
-  }
-}
-`;
+//     --backdrop-color: rgba(0, 0, 0, 0.3);
+//     --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+//     --shadow-md: 0px 0.6rem 2.4rem rgba(0, 0, 0, 0.3);
+//     --shadow-lg: 0 2.4rem 3.2rem rgba(0, 0, 0, 0.4);
+
+//     --image-grayscale: 10%;
+//     --image-opacity: 90%;
+//   }
+// }
 
 export default GlobalStyles;
