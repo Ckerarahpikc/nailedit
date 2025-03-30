@@ -21,9 +21,6 @@ function Form() {
       <FormRow label="Password">
         <Input id="password" type="password" />
       </FormRow>
-      <FormRow label="Name">
-        <Input id="name" type="text" />
-      </FormRow>
       <FormRow>
         <Button size="large" variation="regular" type="submit">
           Login

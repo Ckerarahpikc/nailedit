@@ -3,7 +3,7 @@ const morgan = require("morgan");
 const cors = require("cors");
 require("dotenv").config({ path: __dirname + "/config.env" });
 
-const userRoute = require("./routes/testRoute");
+const userRoute = require("./routes/userRoute");
 const app = express();
 
 const GEC = require("./controllers/GEC");
