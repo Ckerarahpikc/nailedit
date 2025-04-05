@@ -9,6 +9,8 @@ const createToken = catchPromise(function () {});
 exports.login = catchPromise(async (req, res, next) => {
   const { email, password } = req.body;
 
+  console.log("body:", req.body);
+
   if (!email || !password) {
     return next(
       new SetUpError("The email and password field are required.", 400)
@@ -23,6 +25,6 @@ exports.login = catchPromise(async (req, res, next) => {
   res.status(200).json({
     status: 200,
     user,
-    message: "Successfully loged in.",
+    message: "Successfully logged in.",
   });
 });

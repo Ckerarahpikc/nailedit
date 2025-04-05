@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 
 import Logo from "../components/Logo";
+import { useEffect, useState } from "react";
 
 const StyledHeader = styled.header`
   width: 100%;
@@ -13,6 +14,9 @@ const StyledHeader = styled.header`
   align-items: center;
   color: var(--color-grey-800);
   font-family: "Playfair Display", sans-serif;
+
+  top: ${(props) => (props.isvisible ? "0" : "-85px")};
+  transition: all 400ms ease;
 `;
 
 const UnorderedList = styled.ul`
@@ -38,6 +42,30 @@ const ListItem = styled.li`
 `;
 
 function Header() {
+  // const [isVisible, setIsVisible] = useState(false);
+  // const [lastScrollY, setLastScrollY] = useState(0);
+
+  // useEffect(
+  //   function () {
+  //     function handleScrollHeader() {
+  //       const currentScrollY = window.scrollY;
+
+  //       if (currentScrollY > lastScrollY && currentScrollY > 100) {
+  //         setIsVisible(true);
+  //       } else {
+  //         setIsVisible(false);
+  //       }
+
+  //       setLastScrollY(currentScrollY);
+  //     }
+
+  //     window.addEventListener("scroll", handleScrollHeader);
+
+  //     return () => window.removeEventListener("scroll", handleScrollHeader);
+  //   },
+  //   [lastScrollY]
+  // );
+
   return (
     <StyledHeader>
       <UnorderedList>

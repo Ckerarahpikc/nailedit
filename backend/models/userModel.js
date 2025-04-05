@@ -52,7 +52,7 @@ userSchema.pre("save", async function (next) {
 });
 
 userSchema.methods.checkPasswords = (password, cryptedPassword) => {
-  console.log("about to compare:", password, "with", cryptedPassword);
+  // console.log("about to compare:", password, "with", cryptedPassword);
   // review: here next I would need to compare it using bcrypt, cuz the cryptedPassword is crypted into the mdb obviously
   return password === cryptedPassword;
 };

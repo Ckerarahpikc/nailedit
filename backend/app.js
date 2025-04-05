@@ -10,17 +10,24 @@ const GEC = require("./controllers/GEC");
 const SetUpError = require("./utils/errorConfig");
 
 if (process.env.NODE_ENV === "developer") app.use(morgan("dev"));
+console.log("cors:", process.env.URL_API);
 
 // configuring app settings
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(cors());
+const corsOptions = {
+  origin: process.env.URL_API,
+  // origin: "https://localhost:1111/api/v1",
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true,
+};
+app.use(cors(corsOptions));
 
 // routing
 app.use("/api/v1", userRoute);
 
 // this its required to be called after all routes, it will handle non-existing or misspelled api query
-app.all('*', (req, res, next) => {
+app.all("*", (req, res, next) => {
   next(new SetUpError(`Can't find ${req.originalUrl} on the server.`, 404));
 });
 

@@ -53,7 +53,7 @@ function PageNotFound() {
         <Heading type="h1">
           The page you are looking for could not be found 😢
         </Heading>
-        <button onClick={navigate(-1)}>&larr; Go back</button>
+        <button onClick={() => navigate(-1)}>&larr; Go back</button>
       </Box>
     </StyledPageNotFound>
   );
