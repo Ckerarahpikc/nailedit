@@ -1,134 +1,69 @@
-function Logo({w, h}) {
+import styled, { css } from "styled-components";
+import { replace, useNavigate } from "react-router-dom";
+
+import PngLogoWhite from "../assets/logoWhite.png";
+import PngLogoDark from "../assets/logoDark.png";
+import PngOnlyLogoWhite from "../assets/onlyLogoWhite.png";
+import PngOnlyLogoDark from "../assets/onlyLogoDark.png";
+import PngOnlyTextWhite from "../assets/onlyTextWhite.png";
+import PngOnlyTextDark from "../assets/onlyTextDark.png";
+
+const Img = styled.img`
+  left: 3rem;
+  display: flex;
+  ${(props) =>
+    props.size === "small" &&
+    css`
+      height: 5rem;
+    `}
+  ${(props) =>
+    props.size === "medium" &&
+    css`
+      height: 10rem;
+    `}
+  ${(props) =>
+    props.size === "large" &&
+    css`
+      height: 15rem;
+    `}
+
+  cursor: pointer;
+  user-select: none;
+`;
+
+const logoType = {
+  whole: {
+    white: PngLogoWhite,
+    dark: PngLogoDark,
+  },
+  icon: {
+    white: PngOnlyLogoWhite,
+    dark: PngOnlyLogoDark,
+  },
+  text: {
+    white: PngOnlyTextWhite,
+    dark: PngOnlyTextDark,
+  },
+};
+
+function Logo({
+  theme = "dark",
+  size = "medium",
+  appearance = "whole",
+  events = false,
+}) {
+  const navigate = useNavigate();
+  const logoSrc = logoType[appearance][theme];
+
+  function goToHome() {
+    if (!events) return;
+
+    navigate("/", { replace: true });
+  }
+
   return (
-    <svg
-      version="1.2"
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 434 64"
-      width="234"
-      height="54"
-    >
-      <title>NailedIt</title>
-      <text
-        id="NailedIt"
-        transform="matrix(1,0,0,1,-3.163,78)"
-        fontSize="114"
-        fontWeight="900"
-        fontFamily='"Playfair Display Black", "Playfair Display", serif'
-        style={{ userSelect: "none" }}
-      >
-        <tspan x="0" y="0" fill="#2b2b2b">
-          N
-        </tspan>
-        <tspan y="0" fill="#2b2b2b">
-          a
-        </tspan>
-        <tspan y="0" fill="#2b2b2b">
-          i
-        </tspan>
-        <tspan y="0" fill="#2b2b2b">
-          l
-        </tspan>
-        <tspan y="0" fill="#2b2b2b">
-          e
-        </tspan>
-        <tspan y="0" fill="#2b2b2b">
-          d
-        </tspan>
-        <tspan y="0" fill="#b8860b">
-          I
-        </tspan>
-        <tspan y="0" fill="#b8860b">
-          t
-        </tspan>
-      </text>
-    </svg>
+    <Img src={logoSrc} size={size} alt="NailedIt Logo :]" onClick={goToHome} />
   );
 }
-
-// info: Playfair Display Black
-// <svg
-//   version="1.2"
-//   xmlns="http://www.w3.org/2000/svg"
-//   viewBox="0 0 534 84"
-//   width="534"
-//   height="84"
-// >
-//   <title>NailedIt</title>
-//   <text
-//     id="NailedIt"
-//     transform="matrix(1,0,0,1,-3.163,78)"
-//     fontSize="114"
-//     fontWeight="900"
-//     fontFamily='"Playfair Display Black", "Playfair Display", serif'
-//   >
-//     <tspan x="0" y="0" fill="#2b2b2b">
-//       N
-//     </tspan>
-//     <tspan y="0" fill="#2b2b2b">
-//       a
-//     </tspan>
-//     <tspan y="0" fill="#2b2b2b">
-//       i
-//     </tspan>
-//     <tspan y="0" fill="#2b2b2b">
-//       l
-//     </tspan>
-//     <tspan y="0" fill="#2b2b2b">
-//       e
-//     </tspan>
-//     <tspan y="0" fill="#2b2b2b">
-//       d
-//     </tspan>
-//     <tspan y="0" fill="#b8860b">
-//       I
-//     </tspan>
-//     <tspan y="0" fill="#b8860b">
-//       t
-//     </tspan>
-//   </text>
-// </svg>;
-
-// info: Cinzel
-// <svg
-//   version="1.2"
-//   xmlns="http://www.w3.org/2000/svg"
-//   viewBox="0 0 534 84"
-//   width="534"
-//   height="84"
-// >
-//   <title>NailedIt</title>
-//   <text
-//     id="NailedIt"
-//     transform="matrix(1,0,0,1,-3.163,78)"
-//     fontSize="114"
-//     fontWeight="700"
-//     fontFamily='"Cinzel-Bold", "Cinzel"'
-//   >
-//     <tspan x="0" y="0" fill="#2b2b2b">
-//       N
-//     </tspan>
-//     <tspan y="0" fill="#2b2b2b">
-//       a
-//     </tspan>
-//     <tspan y="0" fill="#2b2b2b">
-//       i
-//     </tspan>
-//     <tspan y="0" fill="#2b2b2b">
-//       l
-//     </tspan>
-//     <tspan y="0" fill="#2b2b2b">
-//       e
-//     </tspan>
-//     <tspan y="0" fill="#2b2b2b">
-//       d
-//     </tspan>
-//     <tspan y="0" fill="#b8860b">
-//       I
-//     </tspan>
-//     <tspan y="0" fill="#b8860b">
-//       t
-//     </tspan>
-//   </text>
-// </svg>
 
 export default Logo;

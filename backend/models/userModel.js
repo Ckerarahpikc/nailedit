@@ -1,7 +1,14 @@
 const { Schema, model } = require("mongoose");
 const validator = require("validator");
+const bcrypt = require("bcrypt");
 
 const userSchema = new Schema({
+  name: {
+    type: String,
+    required: [true, "User must have a name."],
+    trim: true,
+    maxLength: [50, "Name must be less than or equal to 50 characters."],
+  },
   email: {
     type: String,
     validate: {
@@ -20,17 +27,17 @@ const userSchema = new Schema({
     // hide from db
     select: false,
   },
-  // confirmPassword: {
-  //   type: String,
-  //   required: [true, "User must include a confirmation password."],
-  //   // this will only work on SAVE / CREATE
-  //   validate: {
-  //     validator: (val) => {
-  //       return val === this.password;
-  //     },
-  //     message: "Passwords should match.",
-  //   },
-  // },
+  confirmPassword: {
+    type: String,
+    required: [true, "User must include a confirmation password."],
+    validate: {
+      validator: function (val) {
+        // This only works on CREATE and SAVE
+        return val === this.password;
+      },
+      message: "Passwords should match.",
+    },
+  },
   photo: {
     type: String,
     default: "defaultAv.jpg",
@@ -43,18 +50,28 @@ const userSchema = new Schema({
 });
 
 userSchema.pre("save", async function (next) {
-  // if the password was not modified or either the model is new (meaning it was not changed) then return next()
-  if (!this.isModified("password") || this.isNew) return next();
+  // hash the password if it was modified
+  if (this.isModified("password")) {
+    this.password = await bcrypt.hash(
+      this.password,
+      parseInt(process.env.SALT_ROUNDS, 10)
+    );
+    this.confirmPassword = undefined; // no need to store after registration so get undefined
+  }
 
-  // if it was indeed modified then update the date when it was changed
-  this.passwordChangedAt = Date.now();
+  // update passwordChangedAt if the password was modified and the document is not new
+  if (this.isModified("password") && !this.isNew) {
+    this.passwordChangedAt = Date.now() - 5000;
+  }
+
   next();
 });
 
-userSchema.methods.checkPasswords = (password, cryptedPassword) => {
-  // console.log("about to compare:", password, "with", cryptedPassword);
-  // review: here next I would need to compare it using bcrypt, cuz the cryptedPassword is crypted into the mdb obviously
-  return password === cryptedPassword;
+userSchema.methods.checkPasswords = async (password, cryptedPassword) => {
+  const isTheSame = await bcrypt.compare(password, cryptedPassword);
+
+  // true if all good
+  return isTheSame;
 };
 
 const User = model("users", userSchema);

@@ -1,0 +1,25 @@
+status
+100 - continue / finished
+101 - switching protocols
+
+200 - ok / success
+201 - changed / new resource
+202 - accepted but not complete
+204 - no content to return, but success
+
+301 - moved to the new url permanently
+302 - temporarily located in the differect url
+304 - not modified
+
+400 - bad requrest / invalid syntax
+401 - unaothorized
+403 - forbiden / no rights
+404 - not found / cannot find the request resource
+409 - conflct / request could not be completed
+429 - to many request
+
+500 - internal server error
+501 - not implemented / server does not support the funcionality
+502 - bad gateway 
+503 - service unavailable
+504 - gateway timeout

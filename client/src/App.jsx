@@ -27,19 +27,26 @@ function App() {
         reverseOrder={false}
         toastOptions={{
           className: "",
-          duration: 5000,
           removeDelay: 1000,
           style: {
-            background: "var(--color-grey-200)",
-            color: "#fff",
+            background: "var(--color-grey-50)",
+            color: "var(--color-grey-900)",
+            border: "1px solid var(--color-grey-300)",
+            borderRadius: "var(--border-radius-md)",
+            boxShadow: "var(--shadow-md)",
           },
-
-          // Default options for specific types
           success: {
             duration: 3000,
             iconTheme: {
-              primary: "green",
-              secondary: "black",
+              primary: "var(--color-brand-500)",
+              secondary: "var(--color-grey-50)",
+            },
+          },
+          error: {
+            duration: 5000,
+            iconTheme: {
+              primary: "var(--color-brand-600)",
+              secondary: "var(--color-grey-50)",
             },
           },
         }}
@@ -55,6 +62,7 @@ function App() {
           </Route>
 
           <Route path={"/login"} element={<Login />} />
+          <Route path={"/register"} element={<Login />} />
           <Route path={"*"} element={<PageNotFound />} />
         </Routes>
       </BrowserRouter>

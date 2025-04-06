@@ -1,3 +1,6 @@
+// note: don't forget to use at the end 'GitGuardian' to check if the are any vulnerable lines of code :o
+// note: also for ssl certificate use 'Let's Encrypt'
+
 const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
@@ -10,14 +13,12 @@ const GEC = require("./controllers/GEC");
 const SetUpError = require("./utils/errorConfig");
 
 if (process.env.NODE_ENV === "developer") app.use(morgan("dev"));
-console.log("cors:", process.env.URL_API);
 
 // configuring app settings
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 const corsOptions = {
-  origin: process.env.URL_API,
-  // origin: "https://localhost:1111/api/v1",
+  origin: process.env.ALLOWED_CORS_URL_API,
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true,
 };

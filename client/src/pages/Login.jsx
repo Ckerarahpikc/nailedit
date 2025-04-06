@@ -1,12 +1,15 @@
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 
-import Form from "../ui/Form";
+import Form from "../components/Form";
 import Logo from "../components/Logo";
 import Input from "../components/Input";
 import Button from "../components/Button";
 import FormRow from "../components/FormRow";
 import SpinnerMini from "../components/SpinnerMini";
+import Paragraph from "../components/Paragraph";
+import Link from "../components/Link";
 
 import { useLogin } from "../elements/sign-in-out/useLogin";
 
@@ -29,26 +32,37 @@ const LoginForm = styled.form`
   height: auto;
 
   margin-top: 5rem;
-  background-color: var(--color-beige-200);
+  background: transparent;
   border-radius: var(--border-radius-sm);
-  box-shadow: var(--shadow-lg);
+  /* box-shadow: var(--shadow-lg); */
+  /* border: 1px solid var(--color-grey-800); */
 `;
 
 function Login() {
+  const location = useLocation();
+  const isRegister = location.pathname === "/register";
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { login, isLoading } = useLogin();
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const { login, isLoading = false } = useLogin(); // Default isLoading to false
 
   function handleSubmit(e) {
     e.preventDefault();
-    if (!email || !password) return;
+    if (!email || !password || (isRegister && password !== confirmPassword))
+      return;
 
-    login({ email, password });
+    if (isRegister) {
+      // Handle registration logic here
+      console.log("Registering:", { email, password });
+    } else {
+      login({ email, password });
+    }
   }
 
   return (
     <StyledLoginPage>
-      <Logo />
+      <Logo theme="dark" size="large" appearance="icon" events={false} />
       <LoginForm onSubmit={handleSubmit}>
         <Form>
           <FormRow label="Email">
@@ -67,9 +81,36 @@ function Login() {
             />
           </FormRow>
 
+          {isRegister && (
+            <FormRow label="Confirm Password">
+              <Input
+                id="confirmPassword"
+                type="password"
+                onChange={(e) => setConfirmPassword(e.target.value)}
+              />
+            </FormRow>
+          )}
+
           <FormRow>
-            <Button size="large" variation="regular" type="submit">
-              {isLoading ? "Login" : <SpinnerMini />}
+            <Paragraph>
+              {isRegister
+                ? "Already have an account?"
+                : "Don't have an account yet?"}{" "}
+              <Link href={isRegister ? "/login" : "/register"}>
+                {isRegister ? "Login" : "Register"}
+              </Link>
+            </Paragraph>
+          </FormRow>
+
+          <FormRow>
+            <Button size="large" variation="primary" type="submit">
+              {isLoading ? (
+                <SpinnerMini /> // Show spinner only when isLoading is true
+              ) : isRegister ? (
+                "Register"
+              ) : (
+                "Login"
+              )}
             </Button>
           </FormRow>
         </Form>

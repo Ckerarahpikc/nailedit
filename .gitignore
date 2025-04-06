@@ -9,4 +9,8 @@ client/dist/
 # env variables
 backend/config/config.env
 
+# SSL
+localhost+2.pem
+localhost+2-key.pem
+
 

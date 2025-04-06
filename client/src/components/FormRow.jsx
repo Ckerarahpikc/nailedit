@@ -22,8 +22,8 @@ const StyledFormRow = styled.div`
     border-bottom: 1px solid var(--color-grey-100);
   } */
 
-  &:has(button) {
-    
+  &:has(button) button {
+    width: 100%;
   }
 `;
 

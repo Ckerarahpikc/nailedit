@@ -40,6 +40,7 @@ const GlobalStyles = createGlobalStyle`
   /* Contrast Colors */
   --color-soft-pink: #f8e1e7; /* Soft Feminine Touch */
   --color-soft-white: #fffaf5;
+  --color-soft-white-alternate: #E8F0FE;
   --color-deep-brown: #5d4037;
 
   /* Shadows for Premium Feel */
