@@ -12,6 +12,7 @@ import Paragraph from "../components/Paragraph";
 import Link from "../components/Link";
 
 import { useLogin } from "../elements/sign-in-out/useLogin";
+import useRegister from "../elements/sign-in-out/useRegister";
 
 const StyledLoginPage = styled.div`
   background-color: var(--color-soft-white);
@@ -42,19 +43,24 @@ function Login() {
   const location = useLocation();
   const isRegister = location.pathname === "/register";
 
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const { login, isLoading = false } = useLogin(); // Default isLoading to false
+  const { login, isLoadingLogin = false } = useLogin();
+  const { register, isLoadingRegister = false } = useRegister();
 
   function handleSubmit(e) {
     e.preventDefault();
-    if (!email || !password || (isRegister && password !== confirmPassword))
+    if (
+      !email ||
+      !password ||
+      (isRegister && password !== confirmPassword && !name)
+    )
       return;
 
     if (isRegister) {
-      // Handle registration logic here
-      console.log("Registering:", { email, password });
+      register({ name, email, password, confirmPassword });
     } else {
       login({ email, password });
     }
@@ -62,9 +68,24 @@ function Login() {
 
   return (
     <StyledLoginPage>
-      <Logo theme="dark" size="large" appearance="icon" events={false} />
+      <Logo
+        theme="dark"
+        size={isRegister ? "medium" : "large"}
+        appearance="icon"
+        events={false}
+      />
       <LoginForm onSubmit={handleSubmit}>
         <Form>
+          {isRegister && (
+            <FormRow label="Name">
+              <Input
+                id="name"
+                type="text"
+                onChange={(e) => setName(e.target.value)}
+              />
+            </FormRow>
+          )}
+
           <FormRow label="Email">
             <Input
               id="email"
@@ -104,8 +125,8 @@ function Login() {
 
           <FormRow>
             <Button size="large" variation="primary" type="submit">
-              {isLoading ? (
-                <SpinnerMini /> // Show spinner only when isLoading is true
+              {isLoadingLogin || isLoadingRegister ? (
+                <SpinnerMini />
               ) : isRegister ? (
                 "Register"
               ) : (
