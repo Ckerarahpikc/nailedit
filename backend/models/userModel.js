@@ -47,6 +47,7 @@ const userSchema = new Schema({
     enum: ["admin", "moderator", "client"],
     default: "client",
   },
+  passwordChangedAt: Date,
 });
 
 userSchema.pre("save", async function (next) {
@@ -72,6 +73,22 @@ userSchema.methods.checkPasswords = async (password, cryptedPassword) => {
 
   // true if all good
   return isTheSame;
+};
+
+userSchema.methods.checkPasswordChangedAfterTokenExpired = (jwtTimestamp) => {
+  // 1. check if password was even changed
+  if (this.passwordChangedAt) {
+    // the time when user changed his password
+    const changedAt = parseInt(this.passwordChangedAt.getTime() / 1000, 10);
+    // 2. check if password was changed after the token has been expired
+    if (changedAt > jwtTimestamp) {
+      // if the user changed his password after the token was created, which means changedAt > jwttimestamp in milliseconds, in this case the token is no longer valid and should be deleted
+      return true;
+    }
+  }
+
+  // otherwise return false, meaning token is still valid
+  return false;
 };
 
 const User = model("users", userSchema);

@@ -4,6 +4,7 @@
 const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
+const cookieParser = require("cookie-parser");
 require("dotenv").config({ path: __dirname + "/config.env" });
 
 const userRoute = require("./routes/userRoute");
@@ -23,6 +24,7 @@ const corsOptions = {
   credentials: true,
 };
 app.use(cors(corsOptions));
+app.use(cookieParser());
 
 // routing
 app.use("/api/v1", userRoute);

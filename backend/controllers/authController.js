@@ -23,12 +23,11 @@ const createUser = (user, statusCode, res) => {
   res.cookie("jwt", newToken, {
     expires: new Date(Date.now() + ms(process.env.JWT_COOKIE_EXPIRES_IN)),
     httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
   });
 
   // remove the password from the output (json)
   user.password = undefined;
-
-  console.log("token:", newToken);
 
   // combine token with user and return
   res.status(statusCode).json({
@@ -82,5 +81,45 @@ exports.register = catchPromise(async (req, res, next) => {
         400
       );
     next(error);
+  }
+});
+
+exports.protect = catchPromise(async (req, res, next) => {
+  try {
+    let token;
+    if (req.cookies.jwt) {
+      token = req.cookies.jwt;
+    }
+    if (!token) {
+      next(new SetUpError("You are not logged in. Please log in.", 401));
+    }
+
+    const decoded = verifyToken(token);
+    const user = await User.findById(decoded.id);
+    if (!user)
+      next(
+        new SetUpError(
+          "The current user token has been expired. Please log in again.",
+          401
+        )
+      );
+
+    const isTokenInvalid = user.checkPasswordChangedAfterTokenExpired(
+      decoded.exp
+    );
+    if (isTokenInvalid) {
+      next(
+        new SetUpError(
+          "Your password has been changed recently. Please log in again.",
+          401
+        )
+      );
+    }
+
+    // this will allow us to use user data from server side
+    req.user = user;
+    next();
+  } catch (error) {
+    next(new SetUpError("Invalid token. Please log in again.", 401));
   }
 });
