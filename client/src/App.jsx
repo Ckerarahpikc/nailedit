@@ -56,15 +56,21 @@ function App() {
       <GlobalStyles />
       <BrowserRouter>
         <Routes>
-          <Route element={<AppLayout />}>
+          <Route
+            element={
+              <ProtectedRoute>
+                <AppLayout />
+              </ProtectedRoute>
+            }
+          >
             <Route index element={<Navigate to="/home" replace />} />
-            <Route path={"/home"} element={<Home />} />
-            <Route path={"/profile"} element={<Profile />} />
+            <Route path="/home" element={<Home />} />
+            <Route path="/profile" element={<Profile />} />
           </Route>
 
-          <Route path={"/login"} element={<Login />} />
-          <Route path={"/register"} element={<Login />} />
-          <Route path={"*"} element={<PageNotFound />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Login />} />
+          <Route path="*" element={<PageNotFound />} />
         </Routes>
       </BrowserRouter>
     </QueryClientProvider>

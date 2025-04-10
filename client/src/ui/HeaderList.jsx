@@ -1,27 +1,42 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
+import ProfileSection from "./ProfileSection";
+
 const UnorderedList = styled.ul`
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-align: center;
+  gap: 4rem;
 `;
 const ListItem = styled.li`
-  display: inline-block;
-  margin: 0 2rem;
-  font-size: 2rem;
-  text-transform: uppercase;
+  display: flex;
+  text-transform: lowercase;
+  align-items: center;
+  justify-content: center;
 
   & > * {
     color: var(--color-deep-brown);
+    font-weight: 500;
+    text-transform: lowercase;
+  }
+
+  & > a {
     text-transform: lowercase;
     letter-spacing: 0.5px;
   }
 
-  &:is(:hover, :focus) {
+  & > a:is(:hover, :focus) {
     outline: none;
     text-decoration: underline;
     text-underline-offset: 4px;
     text-decoration-color: var(--color-deep-brown);
+  }
+
+  & > button > svg {
+    width: 2rem;
+    height: 2rem;
   }
 `;
 function HeaderList() {
@@ -35,6 +50,9 @@ function HeaderList() {
       </ListItem>
       <ListItem>
         <Link to="/works">Works</Link>
+      </ListItem>
+      <ListItem>
+        <ProfileSection />
       </ListItem>
     </UnorderedList>
   );

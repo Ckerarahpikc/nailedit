@@ -1,12 +1,14 @@
-import useAuth from "../elements/sign-in-out/useAuth";
 import { Navigate } from "react-router-dom";
 
-function ProtectedRoute({ children }) {
-  const { isAuthenticated } = useAuth();
+import Spinner from "../components/Spinner";
+import useSession from "../elements/sign-in-out/useSession";
 
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
-  }
+function ProtectedRoute({ children }) {
+  const { user, isLoadingUser, error } = useSession();
+
+  if (isLoadingUser) return <Spinner />;
+
+  if (!user || error) return <Navigate to="/login" replace />;
 
   return children;
 }

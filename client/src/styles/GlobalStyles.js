@@ -38,9 +38,10 @@ const GlobalStyles = createGlobalStyle`
   --color-grey-900: #1a1a1a;
 
   /* Contrast Colors */
-  --color-soft-pink: #f8e1e7; /* Soft Feminine Touch */
+  --color-soft-pink: #f8e1e7;
   --color-soft-white: #fffaf5;
   --color-soft-white-alternate: #E8F0FE;
+  --color-soft-brown: #8b6a5e;
   --color-deep-brown: #5d4037;
 
   /* Shadows for Premium Feel */
@@ -154,6 +155,8 @@ img {
 //     --color-brand-500: #c2a372;
 //     --color-brand-600: #9c7f4b;
 //     --color-brand-700: #7d6641;
+//     --color-soft-brown: #5d4037;
+//     --color-deep-brown: #8b6a5e;
 
 //     --backdrop-color: rgba(0, 0, 0, 0.3);
 //     --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);

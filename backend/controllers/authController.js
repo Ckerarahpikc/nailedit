@@ -24,6 +24,7 @@ const createUser = (user, statusCode, res) => {
     expires: new Date(Date.now() + ms(process.env.JWT_COOKIE_EXPIRES_IN)),
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
   });
 
   // remove the password from the output (json)
@@ -85,41 +86,91 @@ exports.register = catchPromise(async (req, res, next) => {
 });
 
 exports.protect = catchPromise(async (req, res, next) => {
-  try {
-    let token;
-    if (req.cookies.jwt) {
-      token = req.cookies.jwt;
-    }
-    if (!token) {
-      next(new SetUpError("You are not logged in. Please log in.", 401));
-    }
-
-    const decoded = verifyToken(token);
-    const user = await User.findById(decoded.id);
-    if (!user)
-      next(
-        new SetUpError(
-          "The current user token has been expired. Please log in again.",
-          401
-        )
-      );
-
-    const isTokenInvalid = user.checkPasswordChangedAfterTokenExpired(
-      decoded.exp
-    );
-    if (isTokenInvalid) {
-      next(
-        new SetUpError(
-          "Your password has been changed recently. Please log in again.",
-          401
-        )
-      );
-    }
-
-    // this will allow us to use user data from server side
-    req.user = user;
-    next();
-  } catch (error) {
-    next(new SetUpError("Invalid token. Please log in again.", 401));
+  let token;
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer")
+  ) {
+    token = req.headers.authorization.split(" ")[1];
+  } else if (req.cookies.jwt) {
+    token = req.cookies.jwt;
   }
+
+  if (!token) {
+    return next(new SetUpError("You are not logged in. Please log in.", 401));
+  }
+
+  const decoded = verifyToken(token);
+  const user = await User.findById(decoded.id);
+
+  if (!user) {
+    return next(
+      new SetUpError(
+        "The current user token has expired. Please log in again.",
+        401
+      )
+    );
+  }
+
+  const isTokenInvalid = user.checkPasswordChangedAfterTokenExpired(
+    decoded.exp
+  );
+  if (isTokenInvalid) {
+    return next(
+      new SetUpError(
+        "Your password has been changed recently. Please log in again.",
+        401
+      )
+    );
+  }
+
+  req.user = user;
+  next();
+});
+
+exports.logout = catchPromise(async (req, res, next) => {
+  res.cookie("jwt", "logged out", {
+    expires: new Date(Date.now() - 1000),
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
+  });
+
+  res.status(200).json({
+    status: 200,
+    message: "Successfully logged out.",
+  });
+});
+
+exports.checkSession = catchPromise(async (req, res, next) => {
+  const { jwt } = req.cookies;
+
+  if (!jwt) {
+    return next(
+      new SetUpError("You are not logged in. Please log in to continue.", 401)
+    );
+  }
+
+  let decoded;
+  try {
+    decoded = verifyToken(jwt);
+  } catch (err) {
+    return next(
+      new SetUpError(
+        "Your session has expired or is invalid. Please log in again.",
+        401
+      )
+    );
+  }
+
+  const user = await User.findById(decoded.id);
+
+  if (!user) {
+    return next(new SetUpError("User not found. Please log in again.", 401));
+  }
+
+  res.status(200).json({
+    status: "success",
+    user,
+  });
 });
