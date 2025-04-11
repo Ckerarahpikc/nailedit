@@ -1,8 +1,6 @@
-import { useState } from "react";
 import { URL_API } from "../utils/constants";
 
 export async function login({ email, password }) {
-  console.log("email pass:", email, password);
   const res = await fetch(`${URL_API}/login`, {
     method: "POST",
     headers: {
@@ -53,14 +51,18 @@ export async function logout() {
 }
 
 export async function checkSession() {
-  const res = await fetch(`${URL_API}/check-session`, {
-    credentials: "include",
-  });
-  const data = await res.json();
+  try {
+    const res = await fetch(`${URL_API}/check-session`, {
+      credentials: "include",
+    });
+    const data = await res.json();
 
-  if (!res.ok) {
-    throw new Error(data.error.message || "Session check failed");
+    if (!res.ok) {
+      throw Error(data.error.message || "Session check failed");
+    }
+
+    return data.user;
+  } catch (err) {
+    throw Error(err);
   }
-
-  return data.user;
 }

@@ -12,7 +12,8 @@ function useSession() {
     queryFn: checkSession,
     staleTime: 1000 * 60 * 5, // 5min
   });
-  return { user, isLoadingUser, error };
+
+  return { user, isLoadingUser, error: error?.message || null };
 }
 
 export default useSession;

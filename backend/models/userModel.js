@@ -40,7 +40,7 @@ const userSchema = new Schema({
   },
   photo: {
     type: String,
-    default: "defaultAv.jpg",
+    default: "default.png",
   },
   status: {
     type: String,

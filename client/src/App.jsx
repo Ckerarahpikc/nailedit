@@ -30,7 +30,7 @@ function App() {
           className: "",
           removeDelay: 1000,
           style: {
-            background: "var(--color-grey-50)",
+            background: "var(--color-grey-100)",
             color: "var(--color-grey-900)",
             border: "1px solid var(--color-grey-300)",
             borderRadius: "var(--border-radius-md)",

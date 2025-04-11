@@ -17,7 +17,6 @@ function useRegister() {
     },
 
     onError: (error) => {
-      console.log("errors:", error);
       toast.error(error.message);
     },
   });

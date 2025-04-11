@@ -22,8 +22,7 @@ module.exports = (err, req, res, next) => {
         path: err.path,
         value: err.value,
       };
-
-      console.log(err.status);
+      console.log("ERROR:", error);
       res.status(err.statusCode).json({ error });
   }
 };

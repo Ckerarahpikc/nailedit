@@ -6,16 +6,13 @@ import Button from "../components/Button";
 
 function ProfileSection() {
   const { logout, isLoadingLogout } = useLogout();
-  return (
-      {!isLoadingLogout ? (
-        <ListItem>
-          <Button size="large" variation="regular" onClick={logout}>
-            <HiOutlineArrowRightStartOnRectangle />
-          </Button>
-        </ListItem>
-      ) : (
-        <SpinnerMini />
-      )}
+
+  return !isLoadingLogout ? (
+    <Button size="large" variation="regular" onClick={logout}>
+      <HiOutlineArrowRightStartOnRectangle />
+    </Button>
+  ) : (
+    <SpinnerMini />
   );
 }
 

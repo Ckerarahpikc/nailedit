@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 import Form from "../components/Form";
@@ -13,6 +13,8 @@ import Link from "../components/Link";
 
 import { useLogin } from "../elements/sign-in-out/useLogin";
 import useRegister from "../elements/sign-in-out/useRegister";
+import useSession from "../elements/sign-in-out/useSession";
+import Spinner from "../components/Spinner";
 
 const StyledLoginPage = styled.div`
   background-color: var(--color-soft-white);
@@ -40,6 +42,7 @@ const LoginForm = styled.form`
 `;
 
 function Login() {
+  const navigate = useNavigate();
   const location = useLocation();
   const isRegister = location.pathname === "/register";
 
@@ -49,6 +52,17 @@ function Login() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const { login, isLoadingLogin = false } = useLogin();
   const { register, isLoadingRegister = false } = useRegister();
+  const { user, isLoadingLogin: isLoadingSession } = useSession();
+
+  useEffect(() => {
+    if (user) {
+      navigate("/home", { replace: true });
+    }
+  }, [user, navigate]);
+
+  if (isLoadingSession) {
+    return <Spinner />;
+  }
 
   function handleSubmit(e) {
     e.preventDefault();

@@ -48,9 +48,16 @@ exports.login = catchPromise(async (req, res, next) => {
   }
 
   const user = await User.findOne({ email }).select("+password");
-  if (!user || !(await user.checkPasswords(password, user.password))) {
+  if (!user)
+    return next(
+      new SetUpError(
+        "We don't have a user with this email. Please try to register instead.",
+        400
+      )
+    );
+
+  if (!(await user.checkPasswords(password, user.password)))
     return next(new SetUpError("Email or password incorrect.", 400));
-  }
 
   createUser(user, 200, res);
 });
