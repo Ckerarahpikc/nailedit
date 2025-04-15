@@ -1,8 +1,8 @@
-import useLogout from "../elements/sign-in-out/useLogout";
-import SpinnerMini from "../components/SpinnerMini";
+import useLogout from "../elements/authentication/useLogout";
+import SpinnerMini from "./SpinnerMini";
 
 import { HiOutlineArrowRightStartOnRectangle } from "react-icons/hi2";
-import Button from "../components/Button";
+import Button from "./Button";
 
 function ProfileSection() {
   const { logout, isLoadingLogout } = useLogout();
