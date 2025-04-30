@@ -12,6 +12,12 @@ const StyledAppLayout = styled.div`
 const Main = styled.main`
   overflow: auto;
   font-family: "Lato", sans-serif;
+
+  // main style of the layout
+  padding: 2rem 1rem;
+  margin: 0 auto;
+
+  min-width: 100%;
 `;
 
 function AppLayout() {

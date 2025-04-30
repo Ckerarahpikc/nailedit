@@ -37,7 +37,7 @@ const userSchema = new Schema({
       },
       message: "Passwords should match.",
     },
-  },
+  },  
   photo: {
     type: String,
     default: "default.png",

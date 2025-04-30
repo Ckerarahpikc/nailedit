@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-import Logo from "../components/Logo";
+import Logo from "../ui/Logo";
 import HeaderList from "./HeaderList";
 
 const StyledHeader = styled.header`

@@ -1,5 +1,5 @@
-import { Link } from "react-router-dom";
-import styled from "styled-components";
+import { Link, useLocation } from "react-router-dom";
+import styled, { css } from "styled-components";
 
 import ProfileSection from "./ProfileSection";
 
@@ -25,6 +25,13 @@ const ListItem = styled.li`
   & > a {
     text-transform: lowercase;
     letter-spacing: 0.5px;
+
+    ${(param) =>
+      param.isActive &&
+      css`
+        text-decoration: underline;
+        text-underline-offset: 4px;
+      `}
   }
 
   & > a:is(:hover, :focus) {
@@ -40,16 +47,18 @@ const ListItem = styled.li`
   }
 `;
 function HeaderList() {
+  const { pathname } = useLocation();
+
   return (
     <UnorderedList>
-      <ListItem>
-        <Link to="/">Home</Link>
+      <ListItem isActive={pathname === "/schedule"}>
+        <Link to="/schedule">Schedule</Link>
       </ListItem>
-      <ListItem>
-        <Link to="/profile">Profile</Link>
-      </ListItem>
-      <ListItem>
+      <ListItem isActive={pathname === "/works"}>
         <Link to="/works">Works</Link>
+      </ListItem>
+      <ListItem isActive={pathname === "/profile"}>
+        <Link to="/profile">Profile</Link>
       </ListItem>
       <ListItem>
         <ProfileSection />

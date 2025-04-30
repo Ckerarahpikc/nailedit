@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 const StyledPageNotFound = styled.main`
   height: 100vh;
-  background-color: var(--color-grey-50);
+  background-color: var(--color-soft-pink);
   display: flex;
   align-items: center;
   justify-content: center;

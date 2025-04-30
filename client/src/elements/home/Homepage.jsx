@@ -1,14 +1,14 @@
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
-import Heading from "../../components/Heading";
-import Button from "../../components/Button";
-import Section from "../../components/Section";
+import Heading from "../../ui/Heading";
+import Button from "../../ui/Button";
+import Section from "../../ui/Section";
 
 import ImageRoyalHands from "../../assets/images/royalhands.jpg";
 import ImageSimpleHand from "../../assets/images/simplehand.jpg";
 import ImageElephant from "../../assets/images/elephantonbooks.jpg";
-import Logo from "../../components/Logo";
+import Logo from "../../ui/Logo";
 
 const StyledHomePage = styled.div`
   display: flex;
@@ -24,6 +24,7 @@ const Img = styled.img`
   object-fit: cover;
   object-position: 40% 30%;
   filter: brightness(60%);
+  user-select: none;
 `;
 
 const SectionContent = styled.div`

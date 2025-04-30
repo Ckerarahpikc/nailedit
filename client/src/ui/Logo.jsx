@@ -1,5 +1,4 @@
-import styled, { css } from "styled-components";
-import { replace, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import PngLogoWhite from "../assets/logoWhite.png";
 import PngLogoDark from "../assets/logoDark.png";
@@ -7,29 +6,7 @@ import PngOnlyLogoWhite from "../assets/onlyLogoWhite.png";
 import PngOnlyLogoDark from "../assets/onlyLogoDark.png";
 import PngOnlyTextWhite from "../assets/onlyTextWhite.png";
 import PngOnlyTextDark from "../assets/onlyTextDark.png";
-
-const Img = styled.img`
-  left: 3rem;
-  display: flex;
-  ${(props) =>
-    props.size === "small" &&
-    css`
-      height: 5rem;
-    `}
-  ${(props) =>
-    props.size === "medium" &&
-    css`
-      height: 10rem;
-    `}
-  ${(props) =>
-    props.size === "large" &&
-    css`
-      height: 15rem;
-    `}
-
-  cursor: pointer;
-  user-select: none;
-`;
+import StyledImage from "../ui/StyledImage";
 
 const logoType = {
   whole: {
@@ -62,7 +39,12 @@ function Logo({
   }
 
   return (
-    <Img src={logoSrc} size={size} alt="NailedIt Logo :]" onClick={goToHome} />
+    <StyledImage
+      src={logoSrc}
+      size={size}
+      alt="NailedIt Logo :]"
+      onClick={goToHome}
+    />
   );
 }
 

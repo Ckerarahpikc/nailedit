@@ -25,7 +25,7 @@ app.use(express.json());
 app.use(compression());
 const corsOptions = {
   origin: process.env.ALLOWED_CORS_URL_API,
-  methods: ["GET", "POST", "PUT", "DELETE"],
+  methods: ["GET", "POST", "DELETE", 'PATCH'],
   credentials: true,
 };
 app.use(cors(corsOptions));

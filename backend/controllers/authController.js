@@ -181,3 +181,16 @@ exports.checkSession = catchPromise(async (req, res, next) => {
     user,
   });
 });
+
+exports.restrictTo = (...arr) => {
+  return (req, res, next) => {
+    if (arr[0] === "all") {
+      return next();
+    } else if (!arr.includes(req.user.status))
+      return next(
+        new SetUpError("You don't have permission to this action", 403)
+      );
+
+    next();
+  };
+};

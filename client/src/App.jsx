@@ -9,7 +9,11 @@ import AppLayout from "./ui/AppLayout";
 import Home from "./pages/Home";
 import Profile from "./pages/Profile";
 import Login from "./pages/Login";
-import ProtectedRoute from "./components/ProtectedRoute";
+import Schedule from "./pages/Schedule";
+import ProtectedRoute from "./ui/ProtectedRoute";
+import FullCalendarStyles from "./styles/FullCalendarStyles";
+import CalendarDay from "./elements/schedule/CalendarDay";
+import Settings from "./pages/Settings";
 
 function App() {
   const queryClient = new QueryClient({
@@ -53,6 +57,7 @@ function App() {
         }}
       />
       <ReactQueryDevtools initialIsOpen={false} />
+      <FullCalendarStyles />
       <GlobalStyles />
       <BrowserRouter>
         <Routes>
@@ -66,6 +71,9 @@ function App() {
             <Route index element={<Navigate to="/home" replace />} />
             <Route path="/home" element={<Home />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/settings" element={<Settings />} />
+            <Route path="/schedule" element={<Schedule />} />
+            <Route path="/schedule/:dateId" element={<CalendarDay />} />
           </Route>
 
           <Route path="/login" element={<Login />} />

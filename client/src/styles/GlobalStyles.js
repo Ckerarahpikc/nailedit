@@ -70,6 +70,7 @@ const GlobalStyles = createGlobalStyle`
 
 html {
   font-size: 62.5%;
+  scroll-behavior: smooth;
 }
 
 body {
@@ -88,18 +89,11 @@ input, button, textarea, select {
 
 button {
   cursor: pointer;
-  background-color: var(--color-brand-500);
   color: var(--color-grey-0);
   border: none;
   padding: 0.8rem 1.6rem;
-  border-radius: var(--border-radius-md);
   box-shadow: var(--shadow-md);
   transition: all 0.3s ease;
-}
-
-button:hover {
-  background-color: var(--color-brand-600);
-  box-shadow: var(--shadow-lg);
 }
 
 button:disabled {
@@ -107,7 +101,7 @@ button:disabled {
   cursor: not-allowed;
 }
 
-input:focus, button:focus, textarea:focus, select:focus {
+input:focus, textarea:focus, select:focus {
   outline: 2px solid var(--color-brand-600);
   outline-offset: -1px;
 }

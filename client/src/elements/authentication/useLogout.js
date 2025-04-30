@@ -6,11 +6,11 @@ import { useNavigate } from "react-router-dom";
 function useLogout() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const { mutate: logout, isLoading: isLoadingLogout } = useMutation({
+  const { mutate: logout, isPending: isLoadingLogout } = useMutation({
     mutationFn: logoutUser,
 
     onSuccess: async () => {
-      queryClient.removeQueries();
+      queryClient.removeQueries(["session"]);
       navigate("/login", { replace: true });
     },
 

@@ -5,12 +5,14 @@ import { checkSession } from "../../services/authApi";
 function useSession() {
   const {
     data: user,
-    isLoading: isLoadingUser,
+    isPending: isLoadingUser,
     error,
   } = useQuery({
-    queryKey: ["session"],
+    queryKey: ["user"],
     queryFn: checkSession,
-    staleTime: 1000 * 60 * 5, // 5min
+    staleTime: 0,
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
   });
 
   return { user, isLoadingUser, error: error?.message || null };

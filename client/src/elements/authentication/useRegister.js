@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 function useRegister() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const { mutate: register, isLoading: isLoadingRegister } = useMutation({
+  const { mutate: register, isPending: isLoadingRegister } = useMutation({
     mutationFn: ({ name, email, password, confirmPassword }) =>
       registerUser({ name, email, password, confirmPassword }),
 
