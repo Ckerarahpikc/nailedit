@@ -1,7 +1,7 @@
 import { URL_API } from "../utils/constants";
 
 export async function login({ email, password }) {
-  const res = await fetch(`${URL_API}/login`, {
+  const res = await fetch(`${URL_API}/user/login`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -19,7 +19,7 @@ export async function login({ email, password }) {
 }
 
 export async function register({ name, email, password, confirmPassword }) {
-  const res = await fetch(`${URL_API}/register`, {
+  const res = await fetch(`${URL_API}/user/register`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -39,7 +39,7 @@ export async function register({ name, email, password, confirmPassword }) {
 }
 
 export async function logout() {
-  const res = await fetch(`${URL_API}/logout`, {
+  const res = await fetch(`${URL_API}/user/logout`, {
     method: "POST",
     credentials: "include",
   });
@@ -51,7 +51,7 @@ export async function logout() {
 }
 
 export async function checkSession() {
-  const res = await fetch(`${URL_API}/check-session`, {
+  const res = await fetch(`${URL_API}/user/check-session`, {
     credentials: "include",
     headers: {
       "Cache-Control": "no-cache",

@@ -1,7 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import styled, { css } from "styled-components";
 
-import ProfileSection from "./ProfileSection";
+import ProfileSection from "./HeadingProfileSection";
 
 const UnorderedList = styled.ul`
   display: flex;

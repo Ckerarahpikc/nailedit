@@ -19,12 +19,12 @@ const createUser = (user, statusCode, res) => {
   // create token
   const newToken = signToken(user._id);
 
-  // create a cookie
+  // review: create a cookie
   res.cookie("jwt", newToken, {
     expires: new Date(Date.now() + ms(process.env.JWT_COOKIE_EXPIRES_IN)),
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
+    httpOnly: true, // preventing client-side access
+    secure: process.env.NODE_ENV === "production", // cockies are sent over https
+    sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax", // prevent CSRF attacks
   });
 
   // remove the password from the output (json)
@@ -93,6 +93,7 @@ exports.register = catchPromise(async (req, res, next) => {
 });
 
 exports.protect = catchPromise(async (req, res, next) => {
+  // cheking jwt present
   let token;
   if (
     req.headers.authorization &&
@@ -107,6 +108,7 @@ exports.protect = catchPromise(async (req, res, next) => {
     return next(new SetUpError("You are not logged in. Please log in.", 401));
   }
 
+  // decode the token
   const decoded = verifyToken(token);
   const user = await User.findById(decoded.id);
 
@@ -119,6 +121,7 @@ exports.protect = catchPromise(async (req, res, next) => {
     );
   }
 
+  // preventing changing password when the jwt is expired
   const isTokenInvalid = user.checkPasswordChangedAfterTokenExpired(
     decoded.exp
   );
@@ -131,6 +134,7 @@ exports.protect = catchPromise(async (req, res, next) => {
     );
   }
 
+  // save user
   req.user = user;
   next();
 });
@@ -149,6 +153,7 @@ exports.logout = catchPromise(async (req, res, next) => {
   });
 });
 
+// the difference between 'protect' middleware and this one - this is for client side, it just checks the jwt validity and doesn't save the user to the request
 exports.checkSession = catchPromise(async (req, res, next) => {
   const { jwt } = req.cookies;
 

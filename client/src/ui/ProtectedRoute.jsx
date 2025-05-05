@@ -6,6 +6,7 @@ import useSession from "../elements/authentication/useSession";
 
 function ProtectedRoute({ children }) {
   const { user, isLoadingUser, error } = useSession();
+
   if (isLoadingUser) return <Spinner />;
 
   if (!user) {

@@ -1,10 +1,10 @@
 import styled, { css } from "styled-components";
 
 const Heading = styled.p`
+  font-family: "Playfair Display", sans-serif;
   ${(props) =>
     props.type === "h1" &&
     css`
-      font-family: "Playfair Display", sans-serif;
       font-size: 8rem;
       letter-spacing: 0.4rem;
       font-weight: 400;

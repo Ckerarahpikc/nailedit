@@ -6,6 +6,7 @@ const Paragraph = styled.p`
   line-height: 1.5;
   color: var(--color-grey-800);
   margin: 0;
+  flex-wrap: nowrap;
 `;
 
 export default Paragraph;

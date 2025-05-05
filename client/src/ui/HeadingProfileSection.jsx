@@ -10,6 +10,7 @@ import SpinnerMini from "./SpinnerMini";
 import useLogout from "../elements/authentication/useLogout";
 import useSession from "../elements/authentication/useSession";
 import { useNavigate } from "react-router-dom";
+import { URL_ADDRESS } from "../utils/constants";
 
 const Img = styled.img`
   position: absolute;
@@ -27,7 +28,10 @@ const Img = styled.img`
 
 function ProfileSection() {
   const navigate = useNavigate();
-  const { user, isLoadingUser } = useSession();
+  const {
+    user: { photo },
+    isLoadingUser,
+  } = useSession();
   const { logout } = useLogout();
 
   function hello() {
@@ -40,7 +44,7 @@ function ProfileSection() {
         {isLoadingUser ? (
           <SpinnerMini />
         ) : (
-          <Img size="small" src={`/src/assets/images/${user.photo}`} />
+          <Img size="small" src={`${URL_ADDRESS}/uploads/${photo}`} />
         )}
       </Menu.Toggle>
 

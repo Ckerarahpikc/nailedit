@@ -2,53 +2,57 @@ const { Schema, model } = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcrypt");
 
-const userSchema = new Schema({
-  name: {
-    type: String,
-    required: [true, "User must have a name."],
-    trim: true,
-    maxLength: [50, "Name must be less than or equal to 50 characters."],
-  },
-  email: {
-    type: String,
-    validate: {
-      validator: (val) => {
-        return validator.isEmail(val);
-      },
+const userSchema = new Schema(
+  {
+    name: {
+      type: String,
+      required: [true, "User must have a name."],
+      trim: true,
+      maxLength: [50, "Name must be less than or equal to 50 characters."],
+    },
+    email: {
+      type: String,
+      trim: true,
+      validate: {
+        validator: (val) => {
+          return validator.isEmail(val);
+        },
 
-      message: "You should use a real email.",
-    },
-  },
-  password: {
-    type: String,
-    required: [true, "User must include a password."],
-    minLength: 6,
-    maxLength: 20,
-    // hide from db
-    select: false,
-  },
-  confirmPassword: {
-    type: String,
-    required: [true, "User must include a confirmation password."],
-    validate: {
-      validator: function (val) {
-        // This only works on CREATE and SAVE
-        return val === this.password;
+        message: "You should use a real email.",
       },
-      message: "Passwords should match.",
     },
-  },  
-  photo: {
-    type: String,
-    default: "default.png",
+    password: {
+      type: String,
+      required: [true, "User must include a password."],
+      minLength: 6,
+      maxLength: 20,
+      // hide from db
+      select: false,
+    },
+    confirmPassword: {
+      type: String,
+      required: [true, "User must include a confirmation password."],
+      validate: {
+        validator: function (val) {
+          // This only works on CREATE and SAVE
+          return val === this.password;
+        },
+        message: "Passwords should match.",
+      },
+    },
+    photo: {
+      type: String,
+      default: "default.png",
+    },
+    status: {
+      type: String,
+      enum: ["admin", "moderator", "client"],
+      default: "client",
+    },
+    passwordChangedAt: Date,
   },
-  status: {
-    type: String,
-    enum: ["admin", "moderator", "client"],
-    default: "client",
-  },
-  passwordChangedAt: Date,
-});
+  { timestamps: true }
+);
 
 userSchema.pre("save", async function (next) {
   // hash the password if it was modified
@@ -75,7 +79,10 @@ userSchema.methods.checkPasswords = async (password, cryptedPassword) => {
   return isTheSame;
 };
 
-userSchema.methods.checkPasswordChangedAfterTokenExpired = (jwtTimestamp) => {
+// review:
+userSchema.methods.checkPasswordChangedAfterTokenExpired = function (
+  jwtTimestamp
+) {
   // 1. check if password was even changed
   if (this.passwordChangedAt) {
     // the time when user changed his password
@@ -91,5 +98,6 @@ userSchema.methods.checkPasswordChangedAfterTokenExpired = (jwtTimestamp) => {
   return false;
 };
 
-const User = model("users", userSchema);
+const User = model("user", userSchema);
+
 module.exports = User;

@@ -1,7 +1,7 @@
 import { URL_API } from "../utils/constants";
 
 export async function getSettings() {
-  const res = await fetch(`${URL_API}/settings`, {
+  const res = await fetch(`${URL_API}/settings/getSettings`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -19,7 +19,7 @@ export async function getSettings() {
 
 export async function updateSettings(body) {
   console.log("body;", body);
-  const res = await fetch(`${URL_API}/settings`, {
+  const res = await fetch(`${URL_API}/settings/updateSettings`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
