@@ -10,10 +10,11 @@ import Home from "./pages/Home";
 import Profile from "./pages/Profile";
 import Login from "./pages/Login";
 import Schedule from "./pages/Schedule";
-import ProtectedRoute from "./ui/ProtectedRoute";
+
 import FullCalendarStyles from "./styles/FullCalendarStyles";
 import CalendarDay from "./elements/schedule/CalendarDay";
 import Settings from "./pages/Settings";
+import ProtectedRouteContext from "./contexts/ProtectedRouteContext";
 
 function App() {
   const queryClient = new QueryClient({
@@ -34,24 +35,24 @@ function App() {
           className: "",
           removeDelay: 1000,
           style: {
-            background: "var(--color-grey-100)",
             color: "var(--color-grey-900)",
             border: "1px solid var(--color-grey-300)",
             borderRadius: "var(--border-radius-md)",
             boxShadow: "var(--shadow-md)",
+            fontFamily: "'Lato', sans-serif",
           },
           success: {
             duration: 3000,
             iconTheme: {
-              primary: "var(--color-brand-500)",
-              secondary: "var(--color-grey-50)",
+              primary: "var(--color-success)",
+              secondary: "var(--color-grey-100)",
             },
           },
           error: {
             duration: 5000,
             iconTheme: {
-              primary: "var(--color-brand-600)",
-              secondary: "var(--color-grey-50)",
+              primary: "var(--color-error)",
+              secondary: "var(--color-grey-100)",
             },
           },
         }}
@@ -63,13 +64,13 @@ function App() {
         <Routes>
           <Route
             element={
-              <ProtectedRoute>
+              <ProtectedRouteContext>
                 <AppLayout />
-              </ProtectedRoute>
+              </ProtectedRouteContext>
             }
           >
-            <Route index element={<Navigate to="/home" replace />} />
-            <Route path="/home" element={<Home />} />
+            <Route index element={<Navigate to="/" replace />} />
+            <Route path="/" element={<Home />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/schedule" element={<Schedule />} />
@@ -78,6 +79,7 @@ function App() {
 
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Login />} />
+
           <Route path="*" element={<PageNotFound />} />
         </Routes>
       </BrowserRouter>

@@ -1,21 +1,19 @@
 import styled from "styled-components";
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 
 import Form from "../../ui/Form";
 import Input from "../../ui/Input";
 import Button from "../../ui/Button";
 import FormRow from "../../ui/FormRow";
-import Spinner from "../../ui/Spinner";
 import SpinnerMini from "../../ui/SpinnerMini";
 import Paragraph from "../../ui/Paragraph";
 import Link from "../../ui/Link";
 
-import { useLogin } from "./useLogin";
+import useLogin from "./useLogin";
 import useRegister from "./useRegister";
-import useSession from "./useSession";
 
-const StyledLoginForm = styled.form`
+const StyledLoginForm = styled.div`
   width: 45rem;
   height: auto;
 
@@ -27,51 +25,35 @@ const StyledLoginForm = styled.form`
 `;
 
 function LoginForm({ isRegister }) {
-  const navigate = useNavigate();
+  // formSatate - metadata about the current state of the form
+  const {
+    register: registerInput,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm();
+  const { login, isLoadingLogin } = useLogin();
+  const { register, isLoadingRegister } = useRegister();
+  const password = watch("password");
+  const confirmPassword = watch("confirmPassword");
 
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const { login, isLoadingLogin = false } = useLogin();
-  const { register, isLoadingRegister = false } = useRegister();
-  const { user, isLoadingLogin: isLoadingSession } = useSession();
-
-  useEffect(() => {
-    if (user) {
-      navigate("/home", { replace: true });
-    }
-  }, [user, navigate]);
-
-  if (isLoadingSession) {
-    return <Spinner />;
-  }
-
-  function handleSubmit(e) {
-    e.preventDefault();
-    if (
-      !email ||
-      !password ||
-      (isRegister && password !== confirmPassword && !name)
-    )
-      return;
-
-    if (isRegister) {
-      register({ name, email, password, confirmPassword });
-    } else {
-      login({ email, password });
-    }
+  function onSubmit(data) {
+    console.log("data:", data);
   }
 
   return (
-    <StyledLoginForm onSubmit={handleSubmit}>
-      <Form>
+    <StyledLoginForm>
+      <Form onSubmit={handleSubmit(onSubmit)}>
         {isRegister && (
           <FormRow label="Name">
             <Input
               id="name"
               type="text"
-              onChange={(e) => setName(e.target.value)}
+              {...registerInput("name", {
+                required: "Name is required",
+                maxLength: 10,
+              })}
+              placeholder={errors?.name?.message}
             />
           </FormRow>
         )}
@@ -80,7 +62,11 @@ function LoginForm({ isRegister }) {
           <Input
             id="email"
             type="email"
-            onChange={(e) => setEmail(e.target.value)}
+            {...registerInput("email", {
+              required: "Email is required",
+              maxLength: 10,
+            })}
+            placeholder={errors?.email?.message}
           />
         </FormRow>
 
@@ -88,7 +74,14 @@ function LoginForm({ isRegister }) {
           <Input
             id="password"
             type="password"
-            onChange={(e) => setPassword(e.target.value)}
+            {...registerInput("password", {
+              required: "Password is required",
+              pattern: /[0-9][a-z][A-Z]/,
+              validate: (value) => {
+                return value === confirmPassword || "Passwords don't match";
+              },
+            })}
+            placeholder={errors?.password && errors?.password?.message}
           />
         </FormRow>
 
@@ -97,7 +90,13 @@ function LoginForm({ isRegister }) {
             <Input
               id="confirmPassword"
               type="password"
-              onChange={(e) => setConfirmPassword(e.target.value)}
+              {...registerInput("confirmPassword", {
+                required: "Confirm password is required",
+                validate: (value) => {
+                  return value === password || "Passwords don't match";
+                },
+              })}
+              placeholder={errors?.confirmPassword?.message}
             />
           </FormRow>
         )}

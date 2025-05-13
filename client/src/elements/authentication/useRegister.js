@@ -1,9 +1,10 @@
-import toast from "react-hot-toast";
 import { register as registerUser } from "../../services/authApi";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
+import { useNotification } from "../../hooks/useNotification";
 
 function useRegister() {
+  const { showNotification } = useNotification();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { mutate: register, isPending: isLoadingRegister } = useMutation({
@@ -11,13 +12,14 @@ function useRegister() {
       registerUser({ name, email, password, confirmPassword }),
 
     onSuccess: (user) => {
-      toast.success("Successfully registered. You're welcome.");
+      showNotification("Successfully registered. You're welcome.", "success");
       queryClient.setQueryData(["user"], user);
-      navigate("/", { replace: true });
+      navigate("/");
     },
 
-    onError: (error) => {
-      toast.error(error.message);
+    onError: (err) => {
+      const errorMessage = err?.message || "An error occured";
+      showNotification(errorMessage, "error");
     },
   });
 

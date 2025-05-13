@@ -73,7 +73,7 @@ exports.updateMe = catchPromise(async (req, res, next) => {
       }
     }
 
-    // optionally delete the old photo (here you could add a timer interval where user were have some time to undo the image if they didn't like the new one after that we could delete the originalOne, meaning all users will occupy only one file as a photo inside uploads folder)
+    // note: optionally delete the old photo (here you could add a timer interval where user were have some time to undo the image if they didn't like the new one after that we could delete the originalOne, meaning all users will occupy only one file as a photo inside uploads folder)
 
     const user = await User.findByIdAndUpdate(
       req.user._id,

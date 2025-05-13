@@ -1,23 +1,25 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { login as loginUser } from "../../services/authApi";
-import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { useNotification } from "../../hooks/useNotification";
 
-export function useLogin() {
+export default function useLogin() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const { showNotification } = useNotification();
 
   const { mutate: login, isPending: isLoadingLogin } = useMutation({
     mutationFn: ({ email, password }) => loginUser({ email, password }),
 
     onSuccess: (user) => {
-      toast.success("Successfully logged in.");
+      showNotification("Successfully logged in.", "success");
       queryClient.setQueryData(["user"], user);
-      navigate("/", { replace: true });
+      navigate("/");
     },
 
-    onError: (error) => {
-      toast.error(error.message);
+    onError: (err) => {
+      const errorMessage = err?.message || "An error occurred.";
+      showNotification(errorMessage, "error");
     },
   });
 

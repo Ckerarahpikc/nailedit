@@ -11,7 +11,9 @@ export async function getSettings() {
   const data = await res.json();
 
   if (!res.ok) {
-    throw new Error(data.error.message || "Could not fetch settings");
+    throw new Error(
+      data.error.message || "Something went wrong. Could not fetch settings."
+    );
   }
 
   return data.settings;
@@ -30,7 +32,9 @@ export async function updateSettings(body) {
   const data = await res.json();
 
   if (!res.ok) {
-    throw new Error(data.error.message || "Could not fetch settings");
+    throw new Error(
+      data.error.message || "Something went wrong. Could not update settings."
+    );
   }
 
   return data.updated;

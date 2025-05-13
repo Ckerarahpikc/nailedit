@@ -1,13 +1,18 @@
 import { useMutation } from "@tanstack/react-query";
 import { updateSettings } from "../../services/settingsApi";
-import toast from "react-hot-toast";
+import { useNotification } from "../../hooks/useNotification";
 
 export function useUpdateSettings() {
+  const showNotification = useNotification();
   const { mutate, isPending } = useMutation({
     mutationFn: (body) => updateSettings(body),
 
-    onError: () => {
-      toast.error("Could not update settings.");
+    onSuccess: () => {
+      showNotification("Settings updated successfully.", "success");
+    },
+
+    onError: (err) => {
+      showNotification(err, "error");
     },
   });
 

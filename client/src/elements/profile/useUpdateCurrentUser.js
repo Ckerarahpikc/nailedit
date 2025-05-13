@@ -1,20 +1,21 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { updatePersonalInformation } from "../../services/profileApi";
-import toast from "react-hot-toast";
+import { updateCurrentUser as updateCurrentUserData } from "../../services/profileApi";
+import { useNotification } from "../../hooks/useNotification";
 
 function useUpdateCurrentUser() {
+  const showNotification = useNotification();
   const queryClient = useQueryClient();
   const { mutate: updateCurrentUser, isPending: isUpdatingUser } = useMutation({
     mutationFn: ({ newName: name, newEmail: email, imageFile: photo }) =>
-      updatePersonalInformation({ name, email, photo }),
+      updateCurrentUserData({ name, email, photo }),
 
     onSuccess: () => {
       queryClient.invalidateQueries(["user"]);
-      toast.success("Profile updated successfully.");
+      showNotification("Profile updated successfully.", "success");
     },
 
     onError: (err) => {
-      toast.error(err);
+      showNotification(err, "error");
     },
   });
 

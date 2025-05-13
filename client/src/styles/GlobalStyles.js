@@ -43,6 +43,8 @@ const GlobalStyles = createGlobalStyle`
   --color-soft-white-alternate: #E8F0FE;
   --color-soft-brown: #8b6a5e;
   --color-deep-brown: #5d4037;
+  --color-error: #DA4167;
+  --color-success: #76BC52;
 
   /* Shadows for Premium Feel */
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
@@ -151,6 +153,8 @@ img {
 //     --color-brand-700: #7d6641;
 //     --color-soft-brown: #5d4037;
 //     --color-deep-brown: #8b6a5e;
+//     --color-error: #DA4167;
+//     --color-success: #76BC52;
 
 //     --backdrop-color: rgba(0, 0, 0, 0.3);
 //     --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);

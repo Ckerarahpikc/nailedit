@@ -7,10 +7,9 @@ import Spinner from "../../ui/Spinner";
 import Input from "../../ui/Input";
 import IndentedContent from "../../ui/IndentedContent";
 
-import useSession from "../authentication/useSession";
-import useUpdateProfilePicture from "./useUpdateProfilePicture";
 import SpinnerMini from "../../ui/SpinnerMini";
 import useUpdateCurrentUser from "./useUpdateCurrentUser";
+import { useProtectedContext } from "../../hooks/useProtectedContext";
 
 const HeadingItem = styled(Heading)`
   color: var(--color-grey-700);
@@ -38,11 +37,7 @@ const RowContent = styled.div`
 `;
 
 function PersonalInformation() {
-  const {
-    user: { name, email, status, createdAt, updatedAt },
-    isLoadingUser,
-  } = useSession();
-  const { updatePicture, isPendingImage } = useUpdateProfilePicture();
+  const { user, isLoadingUser } = useProtectedContext();
   const { updateCurrentUser, isUpdatingUser } = useUpdateCurrentUser();
   const [newName, setNewName] = useState(name);
   const [newEmail, setNewEmail] = useState(email);
@@ -52,8 +47,9 @@ function PersonalInformation() {
 
   if (isLoadingUser) return <Spinner />;
 
-  const createdAtFormated = new Date(createdAt).toLocaleDateString("ru-RU");
-  const updatedAtFormated = new Date(updatedAt).toLocaleDateString("ru-RU");
+  const { name, email, status, createdAt, updatedAt } = user;
+  const createdAtFormat = new Date(createdAt).toLocaleDateString("ru-RU");
+  const updatedAtFormat = new Date(updatedAt).toLocaleDateString("ru-RU");
 
   function handleSubmit() {
     updateCurrentUser({ newName, newEmail, imageFile });
@@ -78,6 +74,7 @@ function PersonalInformation() {
               type="text"
               value={name}
               onChange={(e) => setNewName(e.target.value)}
+              disabled={isUpdatingUser}
             />
           </b>
         </RowContent>
@@ -89,6 +86,7 @@ function PersonalInformation() {
               type="text"
               value={email}
               onChange={(e) => setNewEmail(e.target.value)}
+              disabled={isUpdatingUser}
             />
           </b>
         </RowContent>
@@ -98,18 +96,20 @@ function PersonalInformation() {
           <InputField
             type="file"
             onChange={(e) => setImageFile(e.target.files[0])}
+            disabled={isUpdatingUser}
           />
-          {isPendingImage && <SpinnerMini />}
         </RowContent>
 
-        <Button onClick={() => handleSubmit()}>Submit</Button>
+        <Button onClick={() => handleSubmit()} disabled={isUpdatingUser}>
+          {isUpdatingUser ? <SpinnerMini /> : "Submit"}
+        </Button>
 
         <Paragraph>
-          Account created at: <b>{createdAtFormated}</b>
+          Account created at: <b>{createdAtFormat}</b>
         </Paragraph>
 
         <Paragraph>
-          Account updated at: <b>{updatedAtFormated}</b>
+          Account updated at: <b>{updatedAtFormat}</b>
         </Paragraph>
       </IndentedContent>
     </>

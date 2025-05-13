@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 const Paragraph = styled.p`
   font-family: "Lato", sans-serif;
@@ -7,6 +7,13 @@ const Paragraph = styled.p`
   color: var(--color-grey-800);
   margin: 0;
   flex-wrap: nowrap;
+
+  ${(props) => {
+    props.type === "error" &&
+      css`
+        color: var(--color-error);
+      `;
+  }}
 `;
 
 export default Paragraph;
