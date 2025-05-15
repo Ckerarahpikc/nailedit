@@ -33,7 +33,6 @@ function App() {
         reverseOrder={false}
         toastOptions={{
           className: "",
-          removeDelay: 1000,
           style: {
             color: "var(--color-grey-900)",
             border: "1px solid var(--color-grey-300)",
@@ -49,7 +48,7 @@ function App() {
             },
           },
           error: {
-            duration: 5000,
+            duration: 4000,
             iconTheme: {
               primary: "var(--color-error)",
               secondary: "var(--color-grey-100)",

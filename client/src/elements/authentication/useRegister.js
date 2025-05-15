@@ -18,7 +18,7 @@ function useRegister() {
     },
 
     onError: (err) => {
-      const errorMessage = err?.message || "An error occured";
+      const errorMessage = err?.message || "An error occurred";
       showNotification(errorMessage, "error");
     },
   });

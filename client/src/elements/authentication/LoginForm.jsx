@@ -1,6 +1,7 @@
+import toast from "react-hot-toast";
 import styled from "styled-components";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { IoCheckmarkCircle, IoClose, IoCloseCircle } from "react-icons/io5";
 
 import Form from "../../ui/Form";
 import Input from "../../ui/Input";
@@ -9,9 +10,12 @@ import FormRow from "../../ui/FormRow";
 import SpinnerMini from "../../ui/SpinnerMini";
 import Paragraph from "../../ui/Paragraph";
 import Link from "../../ui/Link";
+import ButtonIcon from "../../ui/ButtonIcon";
 
 import useLogin from "./useLogin";
 import useRegister from "./useRegister";
+import { useNotification } from "../../hooks/useNotification";
+import { useEffect } from "react";
 
 const StyledLoginForm = styled.div`
   width: 45rem;
@@ -24,26 +28,56 @@ const StyledLoginForm = styled.div`
   /* border: 1px solid var(--color-grey-800); */
 `;
 
+const FieldStatusAbsolutePositioned = styled.span`
+  position: absolute;
+  font-size: 2.5rem;
+  right: 0;
+  top: 50%;
+  transform: translate(-50%, -10%);
+`;
+
 function LoginForm({ isRegister }) {
-  // formSatate - metadata about the current state of the form
   const {
     register: registerInput,
     handleSubmit,
     watch,
-    formState: { errors },
-  } = useForm();
+    formState: { errors, isValid },
+  } = useForm({
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+    },
+    mode: "onBlur", // review: show errors when user left a field
+  });
   const { login, isLoadingLogin } = useLogin();
   const { register, isLoadingRegister } = useRegister();
+  const { showNotification } = useNotification();
+
   const password = watch("password");
   const confirmPassword = watch("confirmPassword");
+  const name = watch("name");
+  const email = watch("email");
+
+  useEffect(() => {
+    const fields = ["name", "email", "password", "confirmPassword"];
+    for (const field of fields) {
+      if (errors?.[field]) {
+        showNotification(errors[field].message, "error");
+        break;
+      }
+    }
+  }, [errors, showNotification]);
 
   function onSubmit(data) {
-    console.log("data:", data);
+    console.log("onSubmit called with:", data);
+    login(data);
   }
 
   return (
     <StyledLoginForm>
-      <Form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         {isRegister && (
           <FormRow label="Name">
             <Input
@@ -51,10 +85,25 @@ function LoginForm({ isRegister }) {
               type="text"
               {...registerInput("name", {
                 required: "Name is required",
-                maxLength: 10,
+                validate: (value) => {
+                  if (!value) return true;
+                  if (value.length > 20) {
+                    return "Max length for name is 20 characters";
+                  } else if (value.length < 3)
+                    return "Min length for name is 3 characters";
+                  return true;
+                },
               })}
-              placeholder={errors?.name?.message}
+              placeholder="John Doe"
             />
+            <FieldStatusAbsolutePositioned>
+              {name &&
+                (errors?.name ? (
+                  <IoCloseCircle color="var(--color-error)" />
+                ) : (
+                  <IoCheckmarkCircle color="var(--color-success)" />
+                ))}
+            </FieldStatusAbsolutePositioned>
           </FormRow>
         )}
 
@@ -64,10 +113,25 @@ function LoginForm({ isRegister }) {
             type="email"
             {...registerInput("email", {
               required: "Email is required",
-              maxLength: 10,
+              validate: (value) => {
+                if (!value) return true;
+                if (value.length > 30) {
+                  return "Email has too many characters";
+                } else if (value.length < 4)
+                  return "Min length for email is 4 characters";
+                return true;
+              },
             })}
-            placeholder={errors?.email?.message}
+            placeholder="example@gmail.com"
           />
+          <FieldStatusAbsolutePositioned>
+            {email &&
+              (errors?.email ? (
+                <IoCloseCircle color="var(--color-error)" />
+              ) : (
+                <IoCheckmarkCircle color="var(--color-success)" />
+              ))}
+          </FieldStatusAbsolutePositioned>
         </FormRow>
 
         <FormRow label="Password">
@@ -76,13 +140,24 @@ function LoginForm({ isRegister }) {
             type="password"
             {...registerInput("password", {
               required: "Password is required",
-              pattern: /[0-9][a-z][A-Z]/,
               validate: (value) => {
-                return value === confirmPassword || "Passwords don't match";
+                if (!value) return true;
+                if (value.length < 6) {
+                  return "Password should contain at least 6 characters";
+                }
+                return true;
               },
             })}
-            placeholder={errors?.password && errors?.password?.message}
+            placeholder="******"
           />
+          <FieldStatusAbsolutePositioned>
+            {password &&
+              (errors?.password ? (
+                <IoCloseCircle color="var(--color-error)" />
+              ) : (
+                <IoCheckmarkCircle color="var(--color-success)" />
+              ))}
+          </FieldStatusAbsolutePositioned>
         </FormRow>
 
         {isRegister && (
@@ -93,11 +168,22 @@ function LoginForm({ isRegister }) {
               {...registerInput("confirmPassword", {
                 required: "Confirm password is required",
                 validate: (value) => {
-                  return value === password || "Passwords don't match";
+                  if (!value) return true;
+                  if (value.length < 6)
+                    return "Confirmation password should contain at least 6 characters";
+                  return true;
                 },
               })}
-              placeholder={errors?.confirmPassword?.message}
+              placeholder="******"
             />
+            <FieldStatusAbsolutePositioned>
+              {confirmPassword &&
+                (errors?.confirmPassword ? (
+                  <IoCloseCircle color="var(--color-error)" />
+                ) : (
+                  <IoCheckmarkCircle color="var(--color-success)" />
+                ))}
+            </FieldStatusAbsolutePositioned>
           </FormRow>
         )}
 
@@ -113,7 +199,7 @@ function LoginForm({ isRegister }) {
         </FormRow>
 
         <FormRow>
-          <Button size="large" variation="primary" type="submit">
+          <Button size="large" variation="regular" type="submit">
             {isLoadingLogin || isLoadingRegister ? (
               <SpinnerMini />
             ) : isRegister ? (
@@ -123,7 +209,7 @@ function LoginForm({ isRegister }) {
             )}
           </Button>
         </FormRow>
-      </Form>
+      </form>
     </StyledLoginForm>
   );
 }

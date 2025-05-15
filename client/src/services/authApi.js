@@ -70,6 +70,7 @@ export async function logout() {
 // query
 export async function checkSession() {
   const res = await fetch(`${URL_API}/user/check-session`, {
+    method: "GET",
     credentials: "include",
     headers: {
       "Cache-Control": "no-cache",

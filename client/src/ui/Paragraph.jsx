@@ -1,5 +1,14 @@
 import styled, { css } from "styled-components";
 
+const types = {
+  error: css`
+    color: var(--color-error);
+  `,
+  success: css`
+    color: var(--color-error);
+  `,
+};
+
 const Paragraph = styled.p`
   font-family: "Lato", sans-serif;
   font-size: 1.6rem;
@@ -8,12 +17,7 @@ const Paragraph = styled.p`
   margin: 0;
   flex-wrap: nowrap;
 
-  ${(props) => {
-    props.type === "error" &&
-      css`
-        color: var(--color-error);
-      `;
-  }}
+  ${(props) => types[props.type]}
 `;
 
 export default Paragraph;
