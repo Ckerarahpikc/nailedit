@@ -9,7 +9,6 @@ export default function NotificationProvider({ children }) {
 
   const showNotification = (message, type = "error") => {
     if (!message) {
-      console.error("Notification message is missing.");
       return;
     }
 

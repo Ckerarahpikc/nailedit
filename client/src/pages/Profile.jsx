@@ -1,8 +1,7 @@
-import ProfilePage from "../elements/profile/ProfilePage";
-import Row from "../ui/Row";
+import ProfileNavigation from "../elements/profile/ProfileNavigation";
 
 function Profile() {
-  return <ProfilePage />;
+  return <ProfileNavigation />;
 }
 
 export default Profile;

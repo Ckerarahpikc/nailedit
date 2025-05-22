@@ -71,8 +71,11 @@ function LoginForm({ isRegister }) {
   }, [errors, showNotification]);
 
   function onSubmit(data) {
-    console.log("onSubmit called with:", data);
-    login(data);
+    if (isRegister) {
+      register(data);
+    } else {
+      login(data);
+    }
   }
 
   return (

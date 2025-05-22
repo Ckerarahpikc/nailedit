@@ -20,7 +20,6 @@ export async function getSettings() {
 }
 
 export async function updateSettings(body) {
-  console.log("body;", body);
   const res = await fetch(`${URL_API}/settings/updateSettings`, {
     method: "PATCH",
     headers: {

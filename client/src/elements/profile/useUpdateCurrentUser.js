@@ -6,7 +6,7 @@ function useUpdateCurrentUser() {
   const showNotification = useNotification();
   const queryClient = useQueryClient();
   const { mutate: updateCurrentUser, isPending: isUpdatingUser } = useMutation({
-    mutationFn: ({ newName: name, newEmail: email, imageFile: photo }) =>
+    mutationFn: ({ name, email, photo }) =>
       updateCurrentUserData({ name, email, photo }),
 
     onSuccess: () => {

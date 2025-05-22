@@ -26,7 +26,6 @@ function Calendar() {
       initialView={`${PLUGIN_VIEW_OPTION}`}
       // interaction
       dateClick={(info) => {
-        console.log("info:", info);
         navigate(`/schedule/${info.dateStr}`);
       }}
       selectable={true}

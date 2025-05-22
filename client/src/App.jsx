@@ -20,7 +20,9 @@ function App() {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
-        refetchOnWindowFocus: false,
+        retry: false,
+      },
+      mutations: {
         retry: false,
       },
     },
@@ -68,7 +70,6 @@ function App() {
               </ProtectedRouteContext>
             }
           >
-            <Route index element={<Navigate to="/" replace />} />
             <Route path="/" element={<Home />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/settings" element={<Settings />} />

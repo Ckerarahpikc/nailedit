@@ -40,6 +40,7 @@ export async function register({ name, email, password, confirmPassword }) {
     }),
     credentials: "include",
   });
+
   const data = await res.json();
   if (!res.ok)
     throw new Error(
@@ -85,7 +86,6 @@ export async function checkSession() {
   const data = await res.json();
 
   if (!res.ok) {
-    console.log("data:", data);
     const error = new Error(data.error?.message || "Session invalid");
     error.response = { status: res.status, data };
     throw error;

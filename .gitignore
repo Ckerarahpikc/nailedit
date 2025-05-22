@@ -6,6 +6,8 @@ backend/node_modules/
 # build files
 client/dist/
 
+backend/uploads
+
 # env variables
 backend/config/config.env
 

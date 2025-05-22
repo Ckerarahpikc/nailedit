@@ -11,7 +11,6 @@ function useSession() {
   } = useQuery({
     queryKey: ["user"],
     queryFn: checkSession,
-    refetchOnMount: true,
   });
 
   return {

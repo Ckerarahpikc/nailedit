@@ -62,6 +62,7 @@ exports.updateMe = catchPromise(async (req, res, next) => {
         .toFile(outputPath);
 
       const oldPhotoPath = path.join(__dirname, "../uploads", req.user.photo);
+
       // deleting the old user photo
       if (fs.existsSync(oldPhotoPath)) {
         fs.unlinkSync(oldPhotoPath);
@@ -73,13 +74,13 @@ exports.updateMe = catchPromise(async (req, res, next) => {
       }
     }
 
-    // note: optionally delete the old photo (here you could add a timer interval where user were have some time to undo the image if they didn't like the new one after that we could delete the originalOne, meaning all users will occupy only one file as a photo inside uploads folder)
+    // note: optionally delete the old photo (here you could add a timer interval where user were have some time to undo the image if they didn't like the new one, after that we could delete the originalOne, meaning all users will occupy only one file as a photo inside uploads folder)
 
     const user = await User.findByIdAndUpdate(
       req.user._id,
       {
-        name,
-        email,
+        name: name || req.user.name,
+        email: email || req.user.email,
         photo: photoFileName,
       },
       { new: true, runValidators: true }

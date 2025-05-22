@@ -1,7 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import styled, { css } from "styled-components";
 
-import ProfileSection from "./HeadingProfileSection";
+import HeadingProfileSection from "./HeadingProfileSection";
 
 const UnorderedList = styled.ul`
   display: flex;
@@ -27,7 +27,7 @@ const ListItem = styled.li`
     letter-spacing: 0.5px;
 
     ${(param) =>
-      param.isActive &&
+      param.$active &&
       css`
         text-decoration: underline;
         text-underline-offset: 4px;
@@ -51,17 +51,17 @@ function HeaderList() {
 
   return (
     <UnorderedList>
-      <ListItem isActive={pathname === "/schedule"}>
+      <ListItem $active={pathname === "/schedule"}>
         <Link to="/schedule">Schedule</Link>
       </ListItem>
-      <ListItem isActive={pathname === "/works"}>
+      <ListItem $active={pathname === "/works"}>
         <Link to="/works">Works</Link>
       </ListItem>
-      <ListItem isActive={pathname === "/profile"}>
+      <ListItem $active={pathname === "/profile"}>
         <Link to="/profile">Profile</Link>
       </ListItem>
       <ListItem>
-        <ProfileSection />
+        <HeadingProfileSection />
       </ListItem>
     </UnorderedList>
   );

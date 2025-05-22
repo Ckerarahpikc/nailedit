@@ -23,7 +23,7 @@ const createUser = (user, statusCode, res) => {
   res.cookie("jwt", newToken, {
     expires: new Date(Date.now() + ms(process.env.JWT_COOKIE_EXPIRES_IN)),
     httpOnly: true, // preventing client-side access
-    secure: process.env.NODE_ENV === "production", // cockies are sent over https
+    secure: process.env.NODE_ENV === "production", // cookies are sent over https
     sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax", // prevent CSRF attacks
   });
 
@@ -93,7 +93,7 @@ exports.register = catchPromise(async (req, res, next) => {
 });
 
 exports.protect = catchPromise(async (req, res, next) => {
-  // cheking jwt present
+  // checking jwt present
   let token;
   if (
     req.headers.authorization &&

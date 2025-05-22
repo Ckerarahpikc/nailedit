@@ -37,7 +37,6 @@ function SettingsPage() {
       setProcedureNPrice(procedureNPrice || "");
 
       const destructuredPNP = Object.values(procedureNPrice);
-      console.log(destructuredPNP);
     }
   }, [isLoadingSettings, settings]);
 

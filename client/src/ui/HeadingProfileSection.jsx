@@ -25,8 +25,9 @@ const Img = styled.img`
   }
 `;
 
-function ProfileSection() {
+function HeadingProfileSection() {
   const navigate = useNavigate();
+  const { sessionData } = useProtectedContext();
   const { logout } = useLogout();
 
   function hello() {
@@ -36,7 +37,11 @@ function ProfileSection() {
   return (
     <Menu>
       <Menu.Toggle id="profile-section">
-        {/* <Img size="small" src={`${URL_ADDRESS}/uploads/${user.photo}`} /> */}
+        <Img
+          size="small"
+          src={`${URL_ADDRESS}/uploads/${sessionData.photo}`}
+          title={sessionData.name}
+        />
       </Menu.Toggle>
 
       <Menu.List id="profile-section">
@@ -70,4 +75,4 @@ function ProfileSection() {
 //     <SpinnerMini />
 //   );
 
-export default ProfileSection;
+export default HeadingProfileSection;

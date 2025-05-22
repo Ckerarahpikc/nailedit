@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { HiChevronDown, HiChevronUp } from "react-icons/hi2";
 import Link from "./Link";
 import { useState } from "react";
@@ -32,7 +32,14 @@ const FolderHeader = styled.h4`
 `;
 
 const List = styled.div`
-  display: ${({ isClose }) => (isClose ? "none" : "inline-block")};
+  ${({ $isClose }) =>
+    $isClose
+      ? css`
+          display: "none";
+        `
+      : css`
+          display: "inline-block";
+        `}
   margin-top: 0.5rem;
 
   & > li {
@@ -54,7 +61,7 @@ function DropdownItem({ children, dropDownName }) {
         <span>{isClose ? <HiChevronDown /> : <HiChevronUp />}</span>
       </DropDownName>
 
-      <List isClose={isClose}>{children}</List>
+      <List $isClose={isClose}>{children}</List>
     </Dropdown>
   );
 }

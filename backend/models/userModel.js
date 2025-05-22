@@ -13,6 +13,7 @@ const userSchema = new Schema(
     email: {
       type: String,
       trim: true,
+      unique: true,
       validate: {
         validator: (val) => {
           return validator.isEmail(val);

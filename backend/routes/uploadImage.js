@@ -8,7 +8,7 @@ const SetUpError = require("../utils/errorConfig");
 const User = require("../models/userModel");
 const authController = require("../controllers/authController");
 
-// STORAGE
+// review: STORAGE
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "./uploads");
@@ -16,7 +16,6 @@ const storage = multer.diskStorage({
   filename: function (req, file, cb) {
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
     const actualFile = uniqueSuffix + path.extname(file.originalname);
-    console.log("file:", file);
     cb(null, actualFile);
   },
 });
@@ -33,7 +32,7 @@ const upload = multer({
   },
 });
 
-// ROUTER INCOMMING REQUESTS HANDLING
+// ROUTER INCOMING REQUESTS HANDLING
 router.post(
   "/uploadPicture",
   authController.protect,
@@ -42,8 +41,6 @@ router.post(
   async (req, res, next) => {
     try {
       const userId = req.user._id;
-      console.log(userId);
-      console.log(req.user);
       const filename =
         Date.now() +
         "-" +

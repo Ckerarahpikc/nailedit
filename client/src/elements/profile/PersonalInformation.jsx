@@ -3,7 +3,7 @@ import styled, { css } from "styled-components";
 
 import Heading from "../../ui/Heading";
 import Paragraph from "../../ui/Paragraph";
-import Spinner from "../../ui/Spinner";
+import Button from "../../ui/Button";
 import Input from "../../ui/Input";
 import IndentedContent from "../../ui/IndentedContent";
 
@@ -37,31 +37,30 @@ const RowContent = styled.div`
 `;
 
 function PersonalInformation() {
-  const { user, isLoadingUser } = useProtectedContext();
+  const { sessionData } = useProtectedContext();
   const { updateCurrentUser, isUpdatingUser } = useUpdateCurrentUser();
-  const [newName, setNewName] = useState(name);
-  const [newEmail, setNewEmail] = useState(email);
+  const [name, setNewName] = useState(sessionData.name || "");
+  const [email, setNewEmail] = useState(sessionData.email || "");
   const [password, setPassword] = useState("");
-  const [imageFile, setImageFile] = useState("");
-  // const [previewImage, setPreviewImage] = useState("");
+  const [photo, setPhoto] = useState("");
+  const [previewImage, setPreviewImage] = useState("");
 
-  if (isLoadingUser) return <Spinner />;
+  // useEffect(() => {
+  //   if (state !== "loading") {
+  //     setNewName(sessionData.name);
+  //     setNewEmail(sessionData.email);
+  //     setImageFile(sessionData.photo);
+  //   }
+  // }, [state, sessionData]);
 
-  const { name, email, status, createdAt, updatedAt } = user;
+  const { status, createdAt, updatedAt } = sessionData;
   const createdAtFormat = new Date(createdAt).toLocaleDateString("ru-RU");
   const updatedAtFormat = new Date(updatedAt).toLocaleDateString("ru-RU");
 
   function handleSubmit() {
-    updateCurrentUser({ newName, newEmail, imageFile });
+    if (!name && !email && !photo) return;
+    updateCurrentUser({ name, email, photo });
   }
-
-  // function updateImage(e) {
-  //   const selectedImage = e.target.files[0];
-  //   const formData = new FormData();
-
-  //   formData.append("photo", selectedImage);
-  //   updatePicture(formData);
-  // }
 
   return (
     <>
@@ -95,22 +94,34 @@ function PersonalInformation() {
           <Paragraph>Update Profile Picture:</Paragraph>
           <InputField
             type="file"
-            onChange={(e) => setImageFile(e.target.files[0])}
+            onChange={(e) => {
+              setPhoto(e.target.files[0]);
+              setPreviewImage(URL.createObjectURL(e.target.files[0]));
+            }}
             disabled={isUpdatingUser}
           />
         </RowContent>
 
-        <Button onClick={() => handleSubmit()} disabled={isUpdatingUser}>
-          {isUpdatingUser ? <SpinnerMini /> : "Submit"}
-        </Button>
+        <RowContent>
+          <Button
+            onClick={() => handleSubmit()}
+            // disabled={isUpdatingUser}
+            size="medium"
+            variation="regular"
+          >
+            {isUpdatingUser ? <SpinnerMini /> : "Submit"}
+          </Button>
+        </RowContent>
 
-        <Paragraph>
-          Account created at: <b>{createdAtFormat}</b>
-        </Paragraph>
+        <RowContent>
+          <Paragraph>
+            Account created at: <b>{createdAtFormat}</b>
+          </Paragraph>
 
-        <Paragraph>
-          Account updated at: <b>{updatedAtFormat}</b>
-        </Paragraph>
+          <Paragraph>
+            Account updated at: <b>{updatedAtFormat}</b>
+          </Paragraph>
+        </RowContent>
       </IndentedContent>
     </>
   );

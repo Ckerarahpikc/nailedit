@@ -35,7 +35,7 @@ const sslOptions = {
 };
 
 // RUNNING HTTPS SERVER WITH A CERTIFICATE
-const PORT = process.env.PORT || 443;
+const PORT = process.env.PORT;
 const server = https.createServer(sslOptions, app).listen(PORT, () => {
   console.log(`🚀 Server is running on https://localhost:${PORT}`);
 });
