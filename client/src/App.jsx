@@ -12,7 +12,6 @@ import Login from "./pages/Login";
 import Schedule from "./pages/Schedule";
 
 import FullCalendarStyles from "./styles/FullCalendarStyles";
-import CalendarDay from "./elements/schedule/CalendarDay";
 import Settings from "./pages/Settings";
 import ProtectedRouteContext from "./contexts/ProtectedRouteContext";
 
@@ -74,7 +73,6 @@ function App() {
             <Route path="/profile" element={<Profile />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/schedule" element={<Schedule />} />
-            <Route path="/schedule/:dateId" element={<CalendarDay />} />
           </Route>
 
           <Route path="/login" element={<Login />} />

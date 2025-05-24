@@ -1,12 +1,7 @@
 import SchedulePage from "../elements/schedule/SchedulePage";
-import Row from "../ui/Row";
 
 function Schedule() {
-  return (
-    <Row>
-      <SchedulePage />
-    </Row>
-  );
+  return <SchedulePage />;
 }
 
 export default Schedule;
