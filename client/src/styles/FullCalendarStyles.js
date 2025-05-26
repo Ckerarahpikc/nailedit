@@ -1,6 +1,14 @@
 import { createGlobalStyle } from "styled-components";
 
 const FullCalendarStyles = createGlobalStyle`
+  :root {
+    --calendar-primary: #2C3E50;
+    --calendar-primary-dark: #1A252F;
+    --calendar-accent: #34495E;
+    --calendar-today-bg: #ecf0f1;
+    --calendar-event-text: #ffffff;
+  }
+
   /* Calendar Container */
   .fc {
     background-color: var(--color-grey-0);
@@ -8,7 +16,7 @@ const FullCalendarStyles = createGlobalStyle`
     border-radius: var(--border-radius-lg);
     box-shadow: var(--shadow-md);
     font-family: 'Lato', sans-serif;
-    color: var(--color-grey-700);
+    color: var(--calendar-primary);
   }
 
   /* Header Toolbar */
@@ -22,19 +30,20 @@ const FullCalendarStyles = createGlobalStyle`
   .fc-toolbar-chunk:nth-of-type(2) {
     margin-left: auto;
   }
+
   .fc-toolbar-chunk:nth-of-type(3) {
-margin-left: 1rem;
+    margin-left: 1rem;
   }
 
   .fc-toolbar-title {
     font-size: 2rem;
     font-weight: 700;
-    color: var(--color-brand-700);
+    color: var(--calendar-primary);
   }
 
   .fc-button {
-    background-color: var(--color-brand-500);
-    color: var(--color-grey-0);
+    background-color: var(--calendar-primary);
+    color: var(--calendar-event-text);
     border: none;
     border-radius: var(--border-radius-sm);
     padding: 0.5rem 1rem;
@@ -43,7 +52,7 @@ margin-left: 1rem;
   }
 
   .fc-button:hover {
-    background-color: var(--color-brand-600);
+    background-color: var(--calendar-primary-dark);
   }
 
   .fc-button:disabled {
@@ -57,22 +66,22 @@ margin-left: 1rem;
   }
 
   .fc-day-today {
-    background-color: var(--color-brand-100);
+    background-color: var(--calendar-today-bg);
     font-weight: bold;
   }
 
   /* Events */
   .fc-event {
-    background-color: var(--color-brand-500);
+    background-color: var(--calendar-accent);
     border: none;
     padding: 0.25rem 0.5rem;
     border-radius: var(--border-radius-sm);
     font-size: 1.4rem;
-    color: var(--color-grey-0);
+    color: var(--calendar-event-text);
   }
 
   .fc-event:hover {
-    background-color: var(--color-brand-600);
+    background-color: var(--calendar-primary);
   }
 
   /* List View */
@@ -86,13 +95,13 @@ margin-left: 1rem;
   }
 
   .fc-list-item:hover {
-    background-color: var(--color-beige-100);
+    background-color: var(--calendar-today-bg);
   }
 
   .fc-list-day {
-    background-color: var(--color-beige-200);
+    background-color: var(--calendar-accent);
     font-weight: 600;
-    color: var(--color-beige-900);
+    color: var(--calendar-event-text);
   }
 `;
 

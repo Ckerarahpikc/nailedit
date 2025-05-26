@@ -10,6 +10,7 @@ import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import { useEffect, useState } from "react";
 import ConfirmModal from "../../ui/ConfirmModal";
+import { useModal } from "../../contexts/ModalProvider";
 
 const PLUGIN_VIEW_OPTION = "listMonth"; // dayGridMonth
 
@@ -21,18 +22,6 @@ const StyledLayoutSchedule = styled.div`
 
   padding: 2rem;
 `;
-
-const styledModal = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "background.paper",
-  border: "2px solid #000",
-  boxShadow: 24,
-  p: 4,
-};
 
 const appointments = [
   {
@@ -50,20 +39,6 @@ const appointments = [
 ];
 
 function SchedulePage() {
-  const [open, setOpen] = useState(false);
-  const [id, setId] = useState("");
-  const [showConfirm, setShowConfirm] = useState(false);
-  const [events, setEvents] = useState(appointments);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => {
-    setShowConfirm(true);
-  };
-
-  const onCloseConfirmModal = () => {
-    setOpen(false);
-    setShowConfirm(false);
-  };
-
   const option =
     PLUGIN_VIEW_OPTION === "listDay"
       ? "Сегодня"
@@ -73,19 +48,39 @@ function SchedulePage() {
       ? "В этом месяце"
       : "В этом году";
 
-  const createNewAppointment = (info) => {
+  const [events, setEvents] = useState(appointments);
+  const [eventId, setEventId] = useState("");
+  const [openModal, setOpenModal] = useState(false);
+  const [showConfirmModal, setShowConfirmation] = useState(false);
+  const { showModal, hideModal } = useModal();
+
+  const onCloseConfirmation = () => {
+    // close default and confirm modal
+    setOpenModal(false);
+    setShowConfirmation(false);
+  };
+
+  const createNewAppointment = (event) => {
     // date, dateStr, allDay, jsEvent, view
-    console.log("new appointment:", info);
+    console.log("new appointment:", event);
+    showModal(
+      <>
+        <h2>Новая запись</h2>
+        <p>Дата: {event.date.toLocaleString()}</p>
+        <p>Целый день? {event.allDay ? "Да" : "Нет"}</p>
+        <button onClick={hideModal}>Закрыть</button>
+      </>
+    );
   };
 
   const viewAppointment = ({ event: { start, end, id } }) => {
-    handleOpen();
+    setOpenModal(true);
     console.log("start:", start);
     console.log("end:", end);
     // event, el, jsEvent, view
 
     console.log("Setting id");
-    setId(id);
+    setEventId(id);
   };
 
   const deleteAppointment = (idToDelete) => {
@@ -129,31 +124,15 @@ function SchedulePage() {
         events={events}
       />
 
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={styledModal}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            Text in a modal
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-          </Typography>
-        </Box>
-      </Modal>
-
-      {showConfirm && (
+      {showConfirmModal && (
         <ConfirmModal
-          resourceName={id}
+          resourceName={eventId}
           onConfirm={() => {
-            deleteAppointment(id);
-            onCloseConfirmModal();
+            deleteAppointment(eventId);
+            onCloseConfirmation();
           }}
           disabled={false}
-          onCloseModal={onCloseConfirmModal}
+          onCloseModal={onCloseConfirmation}
           state="delete"
         />
       )}
