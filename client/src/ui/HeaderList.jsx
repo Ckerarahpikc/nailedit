@@ -51,8 +51,8 @@ function HeaderList() {
 
   return (
     <UnorderedList>
-      <ListItem $active={pathname === "/schedule"}>
-        <Link to="/schedule">Schedule</Link>
+      <ListItem $active={pathname === "/calendar"}>
+        <Link to="/calendar">Calendar</Link>
       </ListItem>
       <ListItem $active={pathname === "/works"}>
         <Link to="/works">Works</Link>

@@ -1,20 +1,21 @@
+import { useEffect, useState } from "react";
 import styled from "styled-components";
+
+import dayGridPlugin from "@fullcalendar/daygrid";
 import ruLocale from "@fullcalendar/core/locales/ru";
 import FullCalendar from "@fullcalendar/react";
-import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import listPlugin from "@fullcalendar/list";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
-import { useEffect, useState } from "react";
 import ConfirmModal from "../../ui/ConfirmModal";
 import { useModal } from "../../contexts/ModalProvider";
 
 const PLUGIN_VIEW_OPTION = "listMonth"; // dayGridMonth
 
-const StyledLayoutSchedule = styled.div`
+const StyledLayoutCalendar = styled.div`
   max-width: 100%;
   overflow-y: auto;
   overflow-x: auto;
@@ -38,7 +39,7 @@ const appointments = [
   },
 ];
 
-function SchedulePage() {
+function CalendarContent() {
   const option =
     PLUGIN_VIEW_OPTION === "listDay"
       ? "Сегодня"
@@ -91,7 +92,7 @@ function SchedulePage() {
   };
 
   return (
-    <StyledLayoutSchedule>
+    <StyledLayoutCalendar>
       <FullCalendar
         // plugins
         plugins={[listPlugin, dayGridPlugin, timeGridPlugin, interactionPlugin]}
@@ -136,8 +137,8 @@ function SchedulePage() {
           state="delete"
         />
       )}
-    </StyledLayoutSchedule>
+    </StyledLayoutCalendar>
   );
 }
 
-export default SchedulePage;
+export default CalendarContent;

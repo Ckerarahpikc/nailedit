@@ -47,7 +47,7 @@ const userSchema = new Schema(
     },
     status: {
       type: String,
-      enum: ["admin", "moderator", "client"],
+      enum: ["admin", "client"],
       default: "client",
     },
     passwordChangedAt: Date,

@@ -9,7 +9,7 @@ import AppLayout from "./ui/AppLayout";
 import Home from "./pages/Home";
 import Profile from "./pages/Profile";
 import Login from "./pages/Login";
-import Schedule from "./pages/Schedule";
+import Calendar from "./pages/Calendar";
 
 import FullCalendarStyles from "./styles/FullCalendarStyles";
 import Settings from "./pages/Settings";
@@ -72,7 +72,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/settings" element={<Settings />} />
-            <Route path="/schedule" element={<Schedule />} />
+            <Route path="/calendar" element={<Calendar />} />
           </Route>
 
           <Route path="/login" element={<Login />} />
