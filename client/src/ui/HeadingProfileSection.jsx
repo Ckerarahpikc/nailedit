@@ -6,7 +6,7 @@ import {
 import styled from "styled-components";
 
 import Menu from "./Menu";
-import useLogout from "../elements/authentication/useLogout";
+import useLogout from "../features/authentication/useLogout";
 import { useNavigate } from "react-router-dom";
 import { URL_ADDRESS } from "../utils/constants";
 import { useProtectedContext } from "../hooks/useProtectedContext";

@@ -63,16 +63,17 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route
+            path="/*"
             element={
               <ProtectedRouteContext>
                 <AppLayout />
               </ProtectedRouteContext>
             }
           >
-            <Route path="/" element={<Home />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/settings" element={<Settings />} />
-            <Route path="/schedule" element={<Schedule />} />
+            <Route index element={<Home />} />
+            <Route path="profile" element={<Profile />} />
+            <Route path="settings" element={<Settings />} />
+            <Route path="schedule" element={<Schedule />} />
           </Route>
 
           <Route path="/login" element={<Login />} />

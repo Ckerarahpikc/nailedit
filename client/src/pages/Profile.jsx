@@ -1,4 +1,4 @@
-import ProfileNavigation from "../elements/profile/ProfileNavigation";
+import ProfileNavigation from "../features/profile/ProfileNavigation";
 
 function Profile() {
   return <ProfileNavigation />;

@@ -2,7 +2,7 @@ import { useLocation, Navigate } from "react-router-dom";
 import styled from "styled-components";
 
 import Logo from "../ui/Logo";
-import LoginForm from "../elements/authentication/LoginForm";
+import LoginForm from "../features/authentication/LoginForm";
 import { useNotification } from "../hooks/useNotification";
 import Button from "../ui/Button";
 import useSession from "../hooks/useSession";

@@ -1,4 +1,4 @@
-import SchedulePage from "../elements/schedule/SchedulePage";
+import SchedulePage from "../features/schedule/SchedulePage";
 
 function Schedule() {
   return <SchedulePage />;

@@ -1,4 +1,4 @@
-import SettingsPage from "../elements/settings/SettingsPage";
+import SettingsPage from "../features/settings/SettingsPage";
 import Row from "../ui/Row";
 
 function Settings() {
