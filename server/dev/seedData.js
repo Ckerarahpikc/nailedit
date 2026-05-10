@@ -7,7 +7,7 @@ const Appointment = require("../models/appointmentModel");
 
 async function seedDatabase() {
   try {
-    console.log("🌱 Starting database seeding...");
+    console.log("✅ Starting database seeding...");
 
     // clear data
     await Client.deleteMany({});
@@ -16,7 +16,7 @@ async function seedDatabase() {
     await Settings.deleteMany({});
     await Appointment.deleteMany({});
 
-    console.log("🗑️ Cleared existing data");
+    console.log("✅ Cleared existing data");
 
     // master user
     const master = await Master.create({
@@ -30,7 +30,7 @@ async function seedDatabase() {
       bio: "Профессиональный мастер маникюра с 5-летним опытом",
     });
 
-    console.log("👨‍💼 Created master user");
+    console.log("✅ Created master user");
 
     // clients
     const clients = await Client.create([
@@ -60,7 +60,7 @@ async function seedDatabase() {
       },
     ]);
 
-    console.log("👥 Created client users");
+    console.log("✅ Created client users");
 
     // settings for master
     const settings = await Settings.create({
@@ -107,7 +107,7 @@ async function seedDatabase() {
       isActive: true,
     });
 
-    console.log("⚙️ Created master settings");
+    console.log("✅ Created master settings");
 
     // sample for appointments
     const now = new Date();
@@ -159,7 +159,7 @@ async function seedDatabase() {
       },
     ]);
 
-    console.log("📅 Created sample appointments");
+    console.log("✅ Created sample appointments");
 
     // admin user
     const admin = await Admin.create({
@@ -171,14 +171,14 @@ async function seedDatabase() {
       department: "Management",
     });
 
-    console.log("👑 Created admin user");
+    console.log("✅ Created admin user");
 
     console.log("✅ Database seeding completed successfully!");
-    console.log("\n📋 Test accounts created:");
-    console.log("👨‍💼 Master: master@nailedit.com / password123");
-    console.log("👥 Client 1: maria@example.com / password123");
-    console.log("👥 Client 2: elena@example.com / password123");
-    console.log("👥 Client 3: olga@example.com / password123");
+    console.log("\n✅ Test accounts created:");
+    console.log("✅ Master: master@nailedit.com / password123");
+    console.log("✅ Client 1: maria@example.com / password123");
+    console.log("✅ Client 2: elena@example.com / password123");
+    console.log("✅ Client 3: olga@example.com / password123");
     console.log("👑 Admin: admin@nailedit.com / admin123");
 
     return {
@@ -208,11 +208,11 @@ async function runSeeding() {
 
     await seedDatabase();
 
-    console.log("🎉 Seeding completed! Disconnecting...");
+    console.log("✅ Seeding completed! Disconnecting...");
     await mongoose.disconnect();
     process.exit(0);
   } catch (error) {
-    console.error("💥 Seeding failed:", error);
+    console.error("❌ Seeding failed:", error);
     process.exit(1);
   }
 }
