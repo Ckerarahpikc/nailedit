@@ -27,7 +27,7 @@ const filter = (req, file, cb) => {
   } else {
     cb(
       new SetUpError("Input file contains unsupported image format.", 400),
-      false
+      false,
     );
   }
 };
@@ -82,7 +82,8 @@ exports.updateMe = catchPromise(async (req, res, next) => {
   // 4. build update object with only provided fields
   const updateData = {};
   if (typeof name === "string" && name.trim() !== "") updateData.name = name;
-  if (typeof email === "string" && email.trim() !== "") updateData.email = email;
+  if (typeof email === "string" && email.trim() !== "")
+    updateData.email = email;
   if (photoFileName) updateData.photo = photoFileName;
 
   // if nothing to update, return early
@@ -108,7 +109,9 @@ exports.updateMe = catchPromise(async (req, res, next) => {
   if (photoFileName && req.user.photo && req.user.photo !== "default.png") {
     const oldPhotoPath = path.join(uploadsDir, req.user.photo);
     if (fs.existsSync(oldPhotoPath)) {
-      try { fs.unlinkSync(oldPhotoPath); } catch (_) {}
+      try {
+        fs.unlinkSync(oldPhotoPath);
+      } catch (_) {}
     }
   }
 

@@ -8,8 +8,8 @@ router
   .route("/")
   .get(appointmentController.getAllAppointments)
   .post(
-    authController.restrictTo("client"),
-    appointmentController.createAppointment
+    authController.restrictTo("user"),
+    appointmentController.createAppointment,
   );
 
 router.get("/available-slots", appointmentController.getAvailableSlots);
@@ -21,3 +21,4 @@ router
   .delete(appointmentController.deleteAppointment);
 
 module.exports = router;
+

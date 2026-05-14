@@ -8,7 +8,7 @@ const app = require("./app");
 
 // HANDLE UNCAUGHT EXCEPTIONS
 process.on("uncaughtException", (error) => {
-  console.error("UNCAUGHT EXCEPTION 💥 Shutting down server...");
+  console.error("> UNCAUGHT EXCEPTION 💥 Shutting down server...");
   console.error(error.name, error.message);
   process.exit(1); // crash app safely
 });
@@ -18,12 +18,12 @@ mongoose
   .connect(
     process.env.MONGODB_CONNECTION_STRING.replace(
       "<db_password>",
-      process.env.MONGODB_PASSWORD
-    )
+      process.env.MONGODB_PASSWORD,
+    ),
   )
-  .then(() => console.log("🔥 MongoDB connected."))
+  .then(() => console.log("> MongoDB connected"))
   .catch((error) => {
-    console.error("⛔ MONGODB CONNECTION FAILED");
+    console.error("> MONGODB CONNECTION FAILED");
     console.error(error);
     process.exit(1); // shutting down safely
   });
@@ -37,7 +37,7 @@ const sslOptions = {
 // RUNNING HTTPS SERVER WITH A CERTIFICATE
 const PORT = process.env.PORT;
 const server = https.createServer(sslOptions, app).listen(PORT, () => {
-  console.log(`🚀 Server is running on https://localhost:${PORT}`);
+  console.log(`> Server is running on https://localhost:${PORT}`);
 });
 
 // SOCKET SERVER
@@ -52,17 +52,17 @@ const io = new Server(server, {
 
 // HANDLING SOCKET CONNECTION
 io.on("connection", (socket) => {
-  console.log("🧩 User connected:", socket.id);
+  console.log("> User connected:", socket.id);
 
   // disconecting
   socket.on("disconnect", () => {
-    console.log("💥 User disconected:", socket.id);
+    console.log("> User disconected:", socket.id);
   });
 });
 
 // handle unhandled promise rejections
 process.on("unhandledRejection", (error) => {
-  console.error("UNCAUGHT REJECTION 💥 Shutting down server...");
+  console.error("> UNCAUGHT REJECTION Shutting down server...");
   console.error(error.name, error.message);
   console.error(error);
   // gracefully close server

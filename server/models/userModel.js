@@ -2,7 +2,7 @@ const { Schema, model } = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcrypt");
 
-const clientSchema = new Schema(
+const userSchema = new Schema(
   {
     name: {
       type: String,
@@ -52,18 +52,12 @@ const clientSchema = new Schema(
       type: String,
       default: "default.png",
     },
-    // Client-specific fields
     phone: {
       type: String,
       trim: true,
     },
     dateOfBirth: {
       type: Date,
-    },
-    preferences: {
-      favoriteServices: [String],
-      allergies: [String],
-      notes: String,
     },
     loyaltyPoints: {
       type: Number,
@@ -76,23 +70,22 @@ const clientSchema = new Schema(
     passwordChangedAt: Date,
     userType: {
       type: String,
-      default: "client",
-      immutable: true,
+      default: "user",
+      immutable: true, // only can change if document has isNew: true
     },
   },
   {
     timestamps: true,
-    // Add discriminator for easier querying across all user types
     discriminatorKey: "userType",
-  }
+  },
 );
 
-// Pre-save middleware for password hashing
-clientSchema.pre("save", async function (next) {
+// pre-save middleware for password hashing
+userSchema.pre("save", async function (next) {
   if (this.isModified("password")) {
     this.password = await bcrypt.hash(
       this.password,
-      parseInt(process.env.SALT_ROUNDS, 10)
+      parseInt(process.env.SALT_ROUNDS, 10),
     );
     this.confirmPassword = undefined;
   }
@@ -104,14 +97,15 @@ clientSchema.pre("save", async function (next) {
   next();
 });
 
-// Instance methods
-clientSchema.methods.checkPasswords = async (password, cryptedPassword) => {
+// instance methods
+userSchema.methods.checkPasswords = async (password, cryptedPassword) => {
   const isTheSame = await bcrypt.compare(password, cryptedPassword);
   return isTheSame;
 };
 
-clientSchema.methods.checkPasswordChangedAfterTokenExpired = function (
-  jwtTimestamp
+// password chnage after tokin expiration date
+userSchema.methods.checkPasswordChangedAfterTokenExpired = function (
+  jwtTimestamp,
 ) {
   if (this.passwordChangedAt) {
     const changedAt = parseInt(this.passwordChangedAt.getTime() / 1000, 10);
@@ -122,6 +116,6 @@ clientSchema.methods.checkPasswordChangedAfterTokenExpired = function (
   return false;
 };
 
-const Client = model("client", clientSchema);
+const User = model("user", userSchema);
 
-module.exports = Client;
+module.exports = User;

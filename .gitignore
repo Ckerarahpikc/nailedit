@@ -15,4 +15,5 @@ client/*.env*
 localhost+2.pem
 localhost+2-key.pem
 
-
+# postman api
+postman/

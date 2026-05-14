@@ -11,12 +11,12 @@ const path = require("path");
 const fs = require("fs");
 
 const userRoute = require("./routes/userRoute");
-const uploadRoute = require("./routes/uploadImage");
+// const uploadRoute = require("./routes/uploadRoute");
 const settingsRoute = require("./routes/settingsRoute");
 const appointmentRoute = require("./routes/appointmentRoute");
 const app = express();
 
-const GEC = require("./controllers/GEC");
+const GEC = require("./controllers/globalErrorCatchController");
 const SetUpError = require("./utils/errorConfig");
 
 // 1. use morgan in dev mode
@@ -41,19 +41,19 @@ const staticPath = path.join(__dirname, "../client/dist");
 if (fs.existsSync(staticPath)) {
   app.use(express.static(staticPath));
 } else {
-  console.warn("⚠️ Static directory not found. Skipping express.static().");
+  console.warn("Static directory not found. Skipping express.static().");
 }
 
 // 4. ROUTING
 // api routes first
-app.use("/api/v1/upload", uploadRoute);
+// app.use("/api/v1/upload", uploadRoute);
 app.use("/api/v1/user", userRoute);
 app.use("/api/v1/settings", settingsRoute);
 app.use("/api/v1/appointments", appointmentRoute);
 
 // SPA catch-all for GET requests (serves React app)
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../client/dist", "index.html")); 
+  res.sendFile(path.join(__dirname, "../client/dist", "index.html"));
   // note: this should be changed in production
 });
 

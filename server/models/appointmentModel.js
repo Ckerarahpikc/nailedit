@@ -9,7 +9,7 @@ const appointmentSchema = new Schema(
     },
     masterId: {
       type: Schema.Types.ObjectId,
-      ref: "user",
+      ref: "master",
       required: [true, "Appointment must have a master."],
     },
     procedureName: {
@@ -53,7 +53,8 @@ const appointmentSchema = new Schema(
       type: String,
       enum: {
         values: ["pending", "confirmed", "completed", "cancelled"],
-        message: "Status must be: pending, confirmed, completed, or cancelled.",
+        message:
+          "Status must either be: pending, confirmed, completed, or cancelled.",
       },
       default: "pending",
     },
@@ -67,7 +68,7 @@ const appointmentSchema = new Schema(
     timestamps: true,
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
-  }
+  },
 );
 
 // indexing most used schema props
@@ -84,18 +85,18 @@ appointmentSchema.virtual("durationMinutes").get(function () {
 appointmentSchema.pre("save", function (next) {
   if (!this.endTime && this.procedureDuration) {
     this.endTime = new Date(
-      this.startTime.getTime() + this.procedureDuration * 60 * 1000
+      this.startTime.getTime() + this.procedureDuration * 60 * 1000,
     );
   }
   next();
 });
 
-// Static method to check for time conflicts
+// static method to check for time conflicts
 appointmentSchema.statics.checkTimeConflict = async function (
   masterId,
   startTime,
   endTime,
-  excludeId = null
+  excludeId = null,
 ) {
   const query = {
     masterId,
@@ -116,7 +117,7 @@ appointmentSchema.statics.checkTimeConflict = async function (
   return !!conflictingAppointment;
 };
 
-// Instance method to check if appointment can be cancelled
+// instance method to check if appointment can be cancelled
 appointmentSchema.methods.canBeCancelled = function () {
   const now = new Date();
   const hoursUntilAppointment = (this.startTime - now) / (1000 * 60 * 60);
@@ -126,3 +127,4 @@ appointmentSchema.methods.canBeCancelled = function () {
 const Appointment = model("appointment", appointmentSchema);
 
 module.exports = Appointment;
+

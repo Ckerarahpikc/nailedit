@@ -51,12 +51,7 @@ const adminSchema = new Schema(
       canManageSettings: { type: Boolean, default: true },
       canViewAnalytics: { type: Boolean, default: true },
       canManageAllAppointments: { type: Boolean, default: true },
-      canManageOwnAppointments: {type: Boolean, default: true},
-    },
-    department: {
-      type: String,
-      enum: ["IT", "HR", "Operations", "Management"],
-      default: "Management",
+      canManageOwnAppointments: { type: Boolean, default: true },
     },
     lastLogin: Date,
     isActive: {
@@ -70,10 +65,10 @@ const adminSchema = new Schema(
       immutable: true,
     },
   },
-  { 
+  {
     timestamps: true,
-    discriminatorKey: "userType"
-  }
+    discriminatorKey: "userType",
+  },
 );
 
 // Pre-save middleware for password hashing
@@ -81,7 +76,7 @@ adminSchema.pre("save", async function (next) {
   if (this.isModified("password")) {
     this.password = await bcrypt.hash(
       this.password,
-      parseInt(process.env.SALT_ROUNDS, 10)
+      parseInt(process.env.SALT_ROUNDS, 10),
     );
     this.confirmPassword = undefined;
   }
@@ -100,7 +95,7 @@ adminSchema.methods.checkPasswords = async (password, cryptedPassword) => {
 };
 
 adminSchema.methods.checkPasswordChangedAfterTokenExpired = function (
-  jwtTimestamp
+  jwtTimestamp,
 ) {
   if (this.passwordChangedAt) {
     const changedAt = parseInt(this.passwordChangedAt.getTime() / 1000, 10);
@@ -112,11 +107,11 @@ adminSchema.methods.checkPasswordChangedAfterTokenExpired = function (
 };
 
 // Admin-specific methods
-adminSchema.methods.hasPermission = function(permission) {
+adminSchema.methods.hasPermission = function (permission) {
   return this.permissions[permission] === true;
 };
 
-adminSchema.methods.updateLastLogin = function() {
+adminSchema.methods.updateLastLogin = function () {
   this.lastLogin = new Date();
   // Avoid running full validation when only updating lastLogin
   return this.save({ validateBeforeSave: false });

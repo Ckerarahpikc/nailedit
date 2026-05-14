@@ -7,9 +7,9 @@ const Master = require("../models/masterModel");
 // get all apt
 exports.getAllAppointments = catchPromise(async (req, res, next) => {
   let filter = {};
-  
+
   // if client - show only personal apt
-  if (req.user.status === "client") {
+  if (req.user.status === "user") {
     filter.userId = req.user._id;
   }
   // if master - show all apt created for this master
@@ -25,6 +25,10 @@ exports.getAllAppointments = catchPromise(async (req, res, next) => {
     .populate("userId", "name email photo")
     .populate("masterId", "name email")
     .sort({ startTime: 1 });
+
+  if (!appointments) {
+    return next(new SetUpError("No appointments found.", 404));
+  }
 
   res.status(200).json({
     status: "success",
@@ -43,13 +47,13 @@ exports.getAppointment = catchPromise(async (req, res, next) => {
     return next(new SetUpError("No appointment found with that ID", 404));
   }
 
-  // Check if user has permission to view this appointment
+  // check if user has permission to view this appointment
   if (
-    req.user.status === "client" &&
+    req.user.status === "user" &&
     appointment.userId._id.toString() !== req.user._id.toString()
   ) {
     return next(
-      new SetUpError("You don't have permission to view this appointment", 403)
+      new SetUpError("You don't have permission to view this appointment", 403),
     );
   }
 
@@ -58,7 +62,7 @@ exports.getAppointment = catchPromise(async (req, res, next) => {
     appointment.masterId._id.toString() !== req.user._id.toString()
   ) {
     return next(
-      new SetUpError("You don't have permission to view this appointment", 403)
+      new SetUpError("You don't have permission to view this appointment", 403),
     );
   }
 
@@ -68,62 +72,56 @@ exports.getAppointment = catchPromise(async (req, res, next) => {
   });
 });
 
-// Create new appointment (only clients can create)
+// create new appointment (only clients can create)
 exports.createAppointment = catchPromise(async (req, res, next) => {
   const { masterId, procedureName, startTime, notes } = req.body;
 
-  // Only clients can create appointments
-  if (req.user.status !== "client") {
-    return next(
-      new SetUpError("Only clients can create appointments", 403)
-    );
+  // only clients can create appointments
+  if (req.user.status !== "user") {
+    return next(new SetUpError("Only clients can create appointments", 403));
   }
 
-  // Verify master exists and is active
+  // verify master exists and is active
   const master = await Master.findOne({ _id: masterId, userType: "master" });
   if (!master) {
     return next(new SetUpError("Master not found or inactive", 404));
   }
 
-  // Get master's settings
+  // get master's settings
   const settings = await Settings.findOne({ masterId, isActive: true });
   if (!settings) {
     return next(new SetUpError("Master settings not found or inactive", 404));
   }
 
-  // Find the procedure
+  // find the procedure
   const procedure = settings.getProcedureByName(procedureName);
   if (!procedure) {
     return next(new SetUpError("Procedure not found", 404));
   }
 
-  // Calculate end time
+  // calculate end time
   const appointmentStart = new Date(startTime);
   const appointmentEnd = new Date(
-    appointmentStart.getTime() + procedure.duration * 60 * 1000
+    appointmentStart.getTime() + procedure.duration * 60 * 1000,
   );
 
-  // Validate time slot is within working hours
+  // validate time slot is within working hours
   if (!settings.isTimeSlotValid(appointmentStart, appointmentEnd)) {
-    return next(
-      new SetUpError("Selected time is outside working hours", 400)
-    );
+    return next(new SetUpError("Selected time is outside working hours", 400));
   }
 
-  // Check for conflicts
+  // check for conflicts
   const hasConflict = await Appointment.checkTimeConflict(
     masterId,
     appointmentStart,
-    appointmentEnd
+    appointmentEnd,
   );
 
   if (hasConflict) {
-    return next(
-      new SetUpError("Time slot is already booked", 400)
-    );
+    return next(new SetUpError("Time slot is already booked", 400));
   }
 
-  // Create appointment
+  // create appointment
   const appointment = await Appointment.create({
     userId: req.user._id,
     masterId,
@@ -144,7 +142,7 @@ exports.createAppointment = catchPromise(async (req, res, next) => {
   });
 });
 
-// Update appointment
+// update appointment
 exports.updateAppointment = catchPromise(async (req, res, next) => {
   const appointment = await Appointment.findById(req.params.id);
 
@@ -152,23 +150,26 @@ exports.updateAppointment = catchPromise(async (req, res, next) => {
     return next(new SetUpError("No appointment found with that ID", 404));
   }
 
-  // Check permissions
+  // check permissions
   const canUpdate =
     req.user.status === "admin" ||
     (req.user.status === "master" &&
       appointment.masterId.toString() === req.user._id.toString()) ||
-    (req.user.status === "client" &&
+    (req.user.status === "user" &&
       appointment.userId.toString() === req.user._id.toString() &&
       appointment.status === "pending");
 
   if (!canUpdate) {
     return next(
-      new SetUpError("You don't have permission to update this appointment", 403)
+      new SetUpError(
+        "You don't have permission to update this appointment",
+        403,
+      ),
     );
   }
 
-  // Clients can only update notes and cancel
-  if (req.user.status === "client") {
+  // clients can only update notes and cancel
+  if (req.user.status === "user") {
     const allowedFields = ["notes"];
     if (req.body.status === "cancelled" && appointment.canBeCancelled()) {
       allowedFields.push("status");
@@ -183,7 +184,7 @@ exports.updateAppointment = catchPromise(async (req, res, next) => {
 
     Object.assign(appointment, updates);
   } else {
-    // Masters and admins can update status and notes
+    // masters and admins can update status and notes
     const allowedFields = ["status", "notes"];
     const updates = {};
     allowedFields.forEach((field) => {
@@ -205,7 +206,7 @@ exports.updateAppointment = catchPromise(async (req, res, next) => {
   });
 });
 
-// Delete appointment
+// delete appointment
 exports.deleteAppointment = catchPromise(async (req, res, next) => {
   const appointment = await Appointment.findById(req.params.id);
 
@@ -213,18 +214,21 @@ exports.deleteAppointment = catchPromise(async (req, res, next) => {
     return next(new SetUpError("No appointment found with that ID", 404));
   }
 
-  // Check permissions
+  // check permissions
   const canDelete =
     req.user.status === "admin" ||
     (req.user.status === "master" &&
       appointment.masterId.toString() === req.user._id.toString()) ||
-    (req.user.status === "client" &&
+    (req.user.status === "user" &&
       appointment.userId.toString() === req.user._id.toString() &&
       appointment.canBeCancelled());
 
   if (!canDelete) {
     return next(
-      new SetUpError("You don't have permission to delete this appointment", 403)
+      new SetUpError(
+        "You don't have permission to delete this appointment",
+        403,
+      ),
     );
   }
 
@@ -236,34 +240,36 @@ exports.deleteAppointment = catchPromise(async (req, res, next) => {
   });
 });
 
-// Get available time slots for booking
+// get available time slots for booking
 exports.getAvailableSlots = catchPromise(async (req, res, next) => {
   const { masterId, date, procedureName } = req.query;
   console.log(masterId, date, procedureName);
 
   if (!masterId || !date || !procedureName) {
     return next(
-      new SetUpError("Master ID, date, and procedure name are required", 400)
+      new SetUpError("Master ID, date, and procedure name are required", 400),
     );
   }
 
-  // Get master's settings
+  // get master's settings
   const settings = await Settings.findOne({ masterId, isActive: true });
   if (!settings) {
     return next(new SetUpError("Master settings not found", 404));
   }
 
-  // Find the procedure
+  // find the procedure
   const procedure = settings.getProcedureByName(procedureName);
   if (!procedure) {
     return next(new SetUpError("Procedure not found", 404));
   }
 
-  // Get the requested date
+  // get the requested date
   const requestedDate = new Date(date);
-  const dayOfWeek = requestedDate.toLocaleDateString("en-US", { weekday: "long" });
+  const dayOfWeek = requestedDate.toLocaleDateString("en-US", {
+    weekday: "long",
+  });
 
-  // Check if master works on this day
+  // check if master works on this day
   if (!settings.workingDays.includes(dayOfWeek)) {
     return res.status(200).json({
       status: "success",
@@ -271,7 +277,7 @@ exports.getAvailableSlots = catchPromise(async (req, res, next) => {
     });
   }
 
-  // Get existing appointments for this date
+  // get existing appointments for this date
   const startOfDay = new Date(requestedDate);
   startOfDay.setHours(0, 0, 0, 0);
   const endOfDay = new Date(requestedDate);
@@ -283,7 +289,7 @@ exports.getAvailableSlots = catchPromise(async (req, res, next) => {
     status: { $in: ["pending", "confirmed"] },
   }).sort({ startTime: 1 });
 
-  // Generate available slots
+  // generate available slots
   const availableSlots = [];
   const workStart = settings.workingHours.start.split(":");
   const workEnd = settings.workingHours.end.split(":");
@@ -296,19 +302,19 @@ exports.getAvailableSlots = catchPromise(async (req, res, next) => {
 
   while (currentTime < endTime) {
     const slotEnd = new Date(
-      currentTime.getTime() + procedure.duration * 60 * 1000
+      currentTime.getTime() + procedure.duration * 60 * 1000,
     );
 
-    // Check if slot fits within working hours
+    // check if slot fits within working hours
     if (slotEnd <= endTime) {
-      // Check for conflicts with existing appointments
+      // check for conflicts with existing appointments
       const hasConflict = existingAppointments.some((appointment) => {
         return (
           currentTime < appointment.endTime && slotEnd > appointment.startTime
         );
       });
 
-      // Check if slot is in the future
+      // check if slot is in the future
       const now = new Date();
       const isInFuture = currentTime > now;
 
@@ -320,9 +326,10 @@ exports.getAvailableSlots = catchPromise(async (req, res, next) => {
       }
     }
 
-    // Move to next slot (procedure duration + break)
+    // move to next slot (procedure duration + break)
     currentTime = new Date(
-      currentTime.getTime() + (procedure.duration + settings.breakDuration) * 60 * 1000
+      currentTime.getTime() +
+        (procedure.duration + settings.breakDuration) * 60 * 1000,
     );
   }
 
@@ -331,3 +338,4 @@ exports.getAvailableSlots = catchPromise(async (req, res, next) => {
     data: { availableSlots },
   });
 });
+

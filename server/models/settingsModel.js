@@ -2,12 +2,6 @@ const { Schema, model } = require("mongoose");
 
 const settingsSchema = new Schema(
   {
-    masterId: {
-      type: Schema.Types.ObjectId,
-      ref: "user",
-      required: [true, "Settings must belong to a master."],
-      unique: true,
-    },
     workingHours: {
       start: {
         type: String,
@@ -83,10 +77,6 @@ const settingsSchema = new Schema(
       min: [1, "Advance booking must be at least 1 day."],
       max: [365, "Advance booking cannot exceed 365 days."],
     },
-    isActive: {
-      type: Boolean,
-      default: true,
-    },
   },
   {
     timestamps: true,
@@ -94,10 +84,7 @@ const settingsSchema = new Schema(
   }
 );
 
-// Index for better performance
-settingsSchema.index({ masterId: 1 });
-
-// Virtual to check if master is currently working
+// virtual to check if master is currently working
 settingsSchema.virtual("isCurrentlyWorking").get(function () {
   const now = new Date();
   const currentDay = now.toLocaleDateString("en-US", { weekday: "long" });
@@ -111,12 +98,12 @@ settingsSchema.virtual("isCurrentlyWorking").get(function () {
   );
 });
 
-// Method to get procedure by name
+// method to get procedure by name
 settingsSchema.methods.getProcedureByName = function (procedureName) {
   return this.procedures.find(proc => proc.name === procedureName);
 };
 
-// Method to validate if time slot is within working hours
+// method to validate if time slot is within working hours
 settingsSchema.methods.isTimeSlotValid = function (startTime, endTime) {
   const startDate = new Date(startTime);
   const endDate = new Date(endTime);

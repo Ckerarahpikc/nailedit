@@ -1,4 +1,4 @@
-const Client = require("../models/clientModel");
+const User = require("../models/userModel");
 const Admin = require("../models/adminModel");
 const Master = require("../models/masterModel");
 const SetUpError = require("../utils/errorConfig");
@@ -7,8 +7,8 @@ class UserService {
   // get model by the type (very handy thing)
   static getModelByType(userType) {
     switch (userType) {
-      case "client":
-        return Client;
+      case "user":
+        return User;
       case "admin":
         return Admin;
       case "master":
@@ -21,7 +21,7 @@ class UserService {
   // find user by email across all the models
   static async findByEmail(email) {
     let user = await Client.findOne({ email }).select("+password");
-    if (user) return { user, userType: "client" };
+    if (user) return { user, userType: "user" };
 
     user = await Admin.findOne({ email }).select("+password");
     if (user) return { user, userType: "admin" };
@@ -61,7 +61,7 @@ class UserService {
 
   // check for the email in any models
   static async emailExists(email, excludeId = null) {
-    const collections = [Client, Admin, Master];
+    const collections = [User, Admin, Master];
 
     for (const Model of collections) {
       const query = excludeId ? { email, _id: { $ne: excludeId } } : { email };
@@ -96,7 +96,7 @@ class UserService {
   // search users across all collection
   static async searchUsers(
     searchTerm,
-    userTypes = ["client", "admin", "master"]
+    userTypes = ["user", "admin", "master"],
   ) {
     const results = [];
 
@@ -107,24 +107,24 @@ class UserService {
       ],
     };
 
-    if (userTypes.includes("client")) {
-      const clients = await Client.find(searchQuery);
+    if (userTypes.includes("user")) {
+      const clients = await User.find(searchQuery);
       results.push(
-        ...clients.map((user) => ({ ...user.toObject(), userType: "client" }))
+        ...clients.map((user) => ({ ...user.toObject(), userType: "user" })),
       );
     }
 
     if (userTypes.includes("admin")) {
       const admins = await Admin.find(searchQuery);
       results.push(
-        ...admins.map((user) => ({ ...user.toObject(), userType: "admin" }))
+        ...admins.map((user) => ({ ...user.toObject(), userType: "admin" })),
       );
     }
 
     if (userTypes.includes("master")) {
       const masters = await Master.find(searchQuery);
       results.push(
-        ...masters.map((user) => ({ ...user.toObject(), userType: "master" }))
+        ...masters.map((user) => ({ ...user.toObject(), userType: "master" })),
       );
     }
 
@@ -133,12 +133,12 @@ class UserService {
 
   // get statistics
   static async getUserStats() {
-    const clientCount = await Client.countDocuments();
+    const usersCount = await User.countDocuments();
     const adminCount = await Admin.countDocuments();
     const masterCount = await Master.countDocuments();
 
     return {
-      clients: clientCount,
+      users: usersCount,
       admins: adminCount,
       masters: masterCount,
       total: clientCount + adminCount + masterCount,
@@ -162,7 +162,7 @@ class UserService {
   //     );
   //   }
 
-  //   if (user.userType === "client") {
+  //   if (user.userType === "user") {
   //     return ["manageOwnProfile", "createAppointments"].some(p =>
   //       requiredPermissions.includes(p)
   //     );

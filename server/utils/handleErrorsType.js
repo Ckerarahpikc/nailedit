@@ -20,7 +20,7 @@ exports.handleErrorsType = (name, error) => {
       // padding errorMessages to error so we can use it in continue
       error.errorMessages = errorMessages;
       const validationMessage = `Error on assigning values. ${errorMessages.join(
-        " "
+        " ",
       )}`;
       return new SetUpError(validationMessage, 400);
 
@@ -30,10 +30,6 @@ exports.handleErrorsType = (name, error) => {
       return new SetUpError(tokenMessage, 401);
 
     default:
-      console.error("ERROR: ", name, error);
-      return new SetUpError(
-        "Unhandled error. See handleErrorsType file see more.",
-        400
-      );
+      return 0;
   }
 };

@@ -10,10 +10,10 @@ router.get("/check-session", authController.checkSession);
 
 router.use(authController.protect);
 
-router.post(
-  "/updateMe",
-  userController.updateUserPhoto,
-  userController.updateMe
-);
+// router.post(
+//   "/updateMe",
+//   clientController.updateUserPhoto,
+//   clientController.updateMe,
+// );
 
 module.exports = router;

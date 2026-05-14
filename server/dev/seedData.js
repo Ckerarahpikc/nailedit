@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const Client = require("../models/clientModel");
+const User = require("../models/userModel");
 const Admin = require("../models/adminModel");
 const Master = require("../models/masterModel");
 const Settings = require("../models/settingsModel");
@@ -10,13 +10,11 @@ async function seedDatabase() {
     console.log("✅ Starting database seeding...");
 
     // clear data
-    await Client.deleteMany({});
+    await User.deleteMany({});
     await Admin.deleteMany({});
     await Master.deleteMany({});
     await Settings.deleteMany({});
     await Appointment.deleteMany({});
-
-    console.log("✅ Cleared existing data");
 
     // master user
     const master = await Master.create({
@@ -30,10 +28,8 @@ async function seedDatabase() {
       bio: "Профессиональный мастер маникюра с 5-летним опытом",
     });
 
-    console.log("✅ Created master user");
-
     // clients
-    const clients = await Client.create([
+    const users = await User.create([
       {
         name: "Мария Клиент",
         email: "maria@example.com",
@@ -60,8 +56,6 @@ async function seedDatabase() {
       },
     ]);
 
-    console.log("✅ Created client users");
-
     // settings for master
     const settings = await Settings.create({
       masterId: master._id,
@@ -69,13 +63,21 @@ async function seedDatabase() {
         start: "09:00",
         end: "18:00",
       },
-      workingDays: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+      workingDays: [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+      ],
       procedures: [
         {
           name: "Классический маникюр",
           price: 1500,
           duration: 60,
-          description: "Обработка кутикулы, придание формы ногтям, покрытие лаком",
+          description:
+            "Обработка кутикулы, придание формы ногтям, покрытие лаком",
         },
         {
           name: "Гель-лак маникюр",
@@ -93,7 +95,8 @@ async function seedDatabase() {
           name: "Дизайн ногтей",
           price: 500,
           duration: 30,
-          description: "Художественный дизайн ногтей (дополнительно к маникюру)",
+          description:
+            "Художественный дизайн ногтей (дополнительно к маникюру)",
         },
         {
           name: "Педикюр",
@@ -106,8 +109,6 @@ async function seedDatabase() {
       advanceBookingDays: 30,
       isActive: true,
     });
-
-    console.log("✅ Created master settings");
 
     // sample for appointments
     const now = new Date();
@@ -175,15 +176,15 @@ async function seedDatabase() {
 
     console.log("✅ Database seeding completed successfully!");
     console.log("\n✅ Test accounts created:");
-    console.log("✅ Master: master@nailedit.com / password123");
-    console.log("✅ Client 1: maria@example.com / password123");
-    console.log("✅ Client 2: elena@example.com / password123");
-    console.log("✅ Client 3: olga@example.com / password123");
+    console.log("\n✅ Master: master@nailedit.com / password123");
+    console.log("\n✅ Client 1: maria@example.com / password123");
+    console.log("\n✅ Client 2: elena@example.com / password123");
+    console.log("\n✅ Client 3: olga@example.com / password123");
     console.log("👑 Admin: admin@nailedit.com / admin123");
 
     return {
       master,
-      clients,
+      users,
       settings,
       appointments,
       admin,
@@ -200,8 +201,8 @@ async function runSeeding() {
     await mongoose.connect(
       process.env.MONGODB_CONNECTION_STRING.replace(
         "<db_password>",
-        process.env.MONGODB_PASSWORD
-      )
+        process.env.MONGODB_PASSWORD,
+      ),
     );
 
     console.log("🔗 Connected to MongoDB");

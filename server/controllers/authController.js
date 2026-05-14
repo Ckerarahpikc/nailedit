@@ -40,11 +40,9 @@ const createUser = (user, userType, statusCode, res) => {
 exports.login = catchPromise(async (req, res, next) => {
   const { email, password } = req.body;
 
-  console.log("email, pass:", email, password);
-
   if (!email || !password) {
     return next(
-      new SetUpError("The email and password field are required.", 400)
+      new SetUpError("The email and password field are required.", 400),
     );
   }
 
@@ -53,8 +51,8 @@ exports.login = catchPromise(async (req, res, next) => {
     return next(
       new SetUpError(
         "We don't have a user with this email. Please try to register instead.",
-        400
-      )
+        400,
+      ),
     );
   }
 
@@ -85,8 +83,8 @@ exports.register = catchPromise(async (req, res, next) => {
     return next(
       new SetUpError(
         "All fields are required. Please try again after you filled them.",
-        400
-      )
+        400,
+      ),
     );
   }
 
@@ -95,8 +93,8 @@ exports.register = catchPromise(async (req, res, next) => {
     return next(
       new SetUpError(
         "Invalid user type. Must be client, admin, or master.",
-        400
-      )
+        400,
+      ),
     );
   }
 
@@ -104,7 +102,7 @@ exports.register = catchPromise(async (req, res, next) => {
     // Check if email already exists in any collection
     if (await UserService.emailExists(email)) {
       return next(
-        new SetUpError("Email is already in use. Please log in instead.", 400)
+        new SetUpError("Email is already in use. Please log in instead.", 400),
       );
     }
 
@@ -115,7 +113,7 @@ exports.register = catchPromise(async (req, res, next) => {
         password,
         confirmPassword,
       },
-      userType
+      userType,
     );
 
     createUser(newUser, userType, 201, res);
@@ -148,21 +146,21 @@ exports.protect = catchPromise(async (req, res, next) => {
     return next(
       new SetUpError(
         "The current user token has expired. Please log in again.",
-        401
-      )
+        401,
+      ),
     );
   }
 
   // preventing changing password when the jwt is expired
   const isTokenInvalid = user.checkPasswordChangedAfterTokenExpired(
-    decoded.exp
+    decoded.exp,
   );
   if (isTokenInvalid) {
     return next(
       new SetUpError(
         "Your password has been changed recently. Please log in again.",
-        401
-      )
+        401,
+      ),
     );
   }
 
@@ -192,7 +190,7 @@ exports.checkSession = catchPromise(async (req, res, next) => {
 
   if (!jwt) {
     return next(
-      new SetUpError("You are not logged in. Please log in to continue.", 401)
+      new SetUpError("You are not logged in. Please log in to continue.", 401),
     );
   }
 
@@ -203,14 +201,13 @@ exports.checkSession = catchPromise(async (req, res, next) => {
     return next(
       new SetUpError(
         "Your session has expired or is invalid. Please log in again.",
-        401
-      )
+        401,
+      ),
     );
   }
 
-  console.log("userid:", decoded.id);
-
   const user = await UserService.findById(decoded.id, decoded.userType);
+  console.log("user: ", user);
 
   if (!user) {
     return next(new SetUpError("User not found. Please log in again.", 401));
@@ -231,7 +228,7 @@ exports.restrictTo = (...arr) => {
       return next();
     } else if (!arr.includes(req.user.userType))
       return next(
-        new SetUpError("You don't have permission to this action", 403)
+        new SetUpError("You don't have permission to this action", 403),
       );
 
     next();
